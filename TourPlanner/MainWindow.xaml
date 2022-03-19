@@ -7,6 +7,25 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <StackPanel Orientation="Vertical" Margin="0,0,0,362">
+            <TextBlock Text="Tour Planner" Margin="5"/>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Tour:" Margin="5,0,5,0" VerticalAlignment="Center"/>
+                <TextBox Grid.Column="1" Name="txtSearchTour" VerticalAlignment="Center"/>
+                <Button Grid.Column="2" Width="40" Margin="5,0,0,0">
+                    Search
+                </Button>
+                <Button Grid.Column="3" Width="40" Margin="5,0,5,0">
+                    Clear
+                </Button>
+            </Grid>
+        </StackPanel>
+        <ListBox x:Name="listTours" Margin="0,72,0,0"/>
     </Grid>
 </Window>
