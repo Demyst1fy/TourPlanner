@@ -27,7 +27,7 @@
 
         <ListBox Grid.Column="0" Grid.Row="1" Margin="5,5,5,5"
                 ItemsSource="{Binding Items}"
-                SelectedItem="{Binding CurrentItem}"
+                SelectedItem="{Binding CurrentTour}"
                 DisplayMemberPath="Name" />
         <StackPanel Grid.Column="0" Grid.Row="2" Margin="5,5,5,5">
             <Button Width="200" Margin="5,5,5,5" Command="{Binding AddTourCommand}" CommandParameter="AddTour">Add</Button>

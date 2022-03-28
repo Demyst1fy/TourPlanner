@@ -10,7 +10,8 @@ namespace TourPlanner.ViewModels
     public class MainViewModel : BaseViewModel
     {
         private ITourHandler tourHandler;
-        private Tour currentItem;
+        private Tour currentTour;
+
         private string searchName;
         public ObservableCollection<Tour> Items { get; set; }
 
@@ -27,16 +28,16 @@ namespace TourPlanner.ViewModels
             }
         }
 
-        public Tour CurrentItem
+        public Tour CurrentTour
         {
-            get { return currentItem; }
+            get { return currentTour; }
             set
             {
-                if ((currentItem != value) && (value != null))
+                if ((currentTour != value) && (value != null))
                 {
-                    currentItem = value;
-                    this.SelectedViewModel = new CurrentTourViewModel();
-                    RaisePropertyChangedEvent(nameof(CurrentItem));
+                    currentTour = value;
+                    this.SelectedViewModel = new CurrentTourViewModel(currentTour);
+                    RaisePropertyChangedEvent(nameof(CurrentTour));
                 }
             }
         }
