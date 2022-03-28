@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Models\TourPlanner.Models.csproj" />
+    <ProjectReference Include="..\TourPlanner.Models\TourPlanner.Models.csproj" />
   </ItemGroup>
 
 </Project>

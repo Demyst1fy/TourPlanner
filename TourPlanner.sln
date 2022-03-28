@@ -5,11 +5,11 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner", "TourPlanner\TourPlanner.csproj", "{DDA9BA1F-0A0C-47D2-866A-CA026D5C4A8E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.Models", "Models\TourPlanner.Models.csproj", "{81873986-753A-4C1C-AA36-BF9FD8337492}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.BusinessLayer", "TourPlanner.BusinessLayer\TourPlanner.BusinessLayer.csproj", "{0D2A02B7-6161-4B76-A322-80C4E4E1B929}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.BusinessLayer", "BusinessLayer\TourPlanner.BusinessLayer.csproj", "{15F02721-6651-4020-9B72-4A58039E2B90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.DataAccessLayer", "TourPlanner.DataAccessLayer\TourPlanner.DataAccessLayer.csproj", "{49484447-63D3-4387-ADBD-BDE290C13A29}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.DataAccessLayer", "DataAccessLayer\TourPlanner.DataAccessLayer.csproj", "{ADFC8484-8EB1-4D1B-BB8F-781D5216FA71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.Models", "TourPlanner.Models\TourPlanner.Models.csproj", "{27FD5BBB-AA47-406B-AE9A-7C5F1892CF28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +21,18 @@ Global
 		{DDA9BA1F-0A0C-47D2-866A-CA026D5C4A8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDA9BA1F-0A0C-47D2-866A-CA026D5C4A8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDA9BA1F-0A0C-47D2-866A-CA026D5C4A8E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81873986-753A-4C1C-AA36-BF9FD8337492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81873986-753A-4C1C-AA36-BF9FD8337492}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81873986-753A-4C1C-AA36-BF9FD8337492}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81873986-753A-4C1C-AA36-BF9FD8337492}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15F02721-6651-4020-9B72-4A58039E2B90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15F02721-6651-4020-9B72-4A58039E2B90}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15F02721-6651-4020-9B72-4A58039E2B90}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15F02721-6651-4020-9B72-4A58039E2B90}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADFC8484-8EB1-4D1B-BB8F-781D5216FA71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADFC8484-8EB1-4D1B-BB8F-781D5216FA71}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADFC8484-8EB1-4D1B-BB8F-781D5216FA71}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADFC8484-8EB1-4D1B-BB8F-781D5216FA71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D2A02B7-6161-4B76-A322-80C4E4E1B929}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D2A02B7-6161-4B76-A322-80C4E4E1B929}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D2A02B7-6161-4B76-A322-80C4E4E1B929}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D2A02B7-6161-4B76-A322-80C4E4E1B929}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49484447-63D3-4387-ADBD-BDE290C13A29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49484447-63D3-4387-ADBD-BDE290C13A29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49484447-63D3-4387-ADBD-BDE290C13A29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49484447-63D3-4387-ADBD-BDE290C13A29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27FD5BBB-AA47-406B-AE9A-7C5F1892CF28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27FD5BBB-AA47-406B-AE9A-7C5F1892CF28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27FD5BBB-AA47-406B-AE9A-7C5F1892CF28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27FD5BBB-AA47-406B-AE9A-7C5F1892CF28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
