@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TourPlanner.BusinessLayer;
@@ -6,16 +7,11 @@ using TourPlanner.Models;
 
 namespace TourPlanner.ViewModels
 {
-    public class TourVM : ViewModelBase
+    public class MainViewModel : BaseViewModel
     {
         private ITourHandler tourHandler;
         private Tour currentItem;
         private string searchName;
-
-        public ICommand SearchCommand { get; set; }
-
-        public ICommand ClearCommand { get; set; }
-
         public ObservableCollection<Tour> Items { get; set; }
 
         public string SearchName
@@ -39,18 +35,39 @@ namespace TourPlanner.ViewModels
                 if ((currentItem != value) && (value != null))
                 {
                     currentItem = value;
+                    this.SelectedViewModel = new CurrentTourViewModel();
                     RaisePropertyChangedEvent(nameof(CurrentItem));
                 }
             }
         }
 
-        public TourVM(ITourHandler tourHandler)
+        public ICommand SearchCommand { get; set; }
+        public ICommand ClearCommand { get; set; }
+        public ICommand AddTourCommand { get; set; }
+
+        private BaseViewModel? _selectedViewModel;
+
+        public BaseViewModel SelectedViewModel
+        {
+            get
+            {
+                return _selectedViewModel;
+            }
+            set
+            {
+                _selectedViewModel = value;
+                RaisePropertyChangedEvent(nameof(SelectedViewModel));
+            }
+        }
+
+        public MainViewModel(ITourHandler tourHandler)
         {
             this.tourHandler = tourHandler;
+
             Items = new ObservableCollection<Tour>();
 
             this.SearchCommand = new RelayCommand(o => {
-                IEnumerable<Tour> items = tourHandler.SearchForTour(SearchName);
+                IEnumerable<Tour> items = this.tourHandler.SearchForTour(SearchName);
                 Items.Clear();
                 foreach (Tour item in items)
                 {
@@ -59,10 +76,15 @@ namespace TourPlanner.ViewModels
             });
 
             this.ClearCommand = new RelayCommand(o => {
+
                 Items.Clear();
                 SearchName = "";
 
                 FillListView();
+            });
+
+            this.AddTourCommand = new RelayCommand(o => {
+                this.SelectedViewModel = new AddTourViewModel();
             });
 
             InitListView();

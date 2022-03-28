@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TourPlanner.Views
+namespace TourPlanner.ViewModels
 {
-    internal class Class1
+    public class CurrentTourViewModel : BaseViewModel
     {
     }
 }
