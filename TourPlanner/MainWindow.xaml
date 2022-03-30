@@ -19,7 +19,7 @@
 
 
         <StackPanel Grid.Column="0" Grid.Row="0" Margin="5,5,5,5">
-            <TextBlock Text="Name:" Margin="0,0,5,0" VerticalAlignment="Center"/>
+            <Label Margin="0,0,5,0" VerticalAlignment="Center">Name:</Label>
             <TextBox VerticalAlignment="Center" Text="{Binding SearchName, Mode=TwoWay}"/>
             <Button Width="200" Margin="5,5,5,5" Command="{Binding SearchCommand}">Search</Button>
             <Button Width="200" Margin="5,5,5,5" Command="{Binding ClearCommand}" CommandParameter="Clear">Clear</Button>
@@ -30,7 +30,7 @@
                 SelectedItem="{Binding CurrentTour}"
                 DisplayMemberPath="Name" />
         <StackPanel Grid.Column="0" Grid.Row="2" Margin="5,5,5,5">
-            <Button Width="200" Margin="5,5,5,5" Command="{Binding AddTourCommand}" CommandParameter="AddTour">Add</Button>
+            <Button x:Name="AddTour" Width="200" Margin="5,5,5,5" Command="{Binding AddTourCommand}" CommandParameter="AddTour">Add</Button>
         </StackPanel>
 
         <ContentControl Grid.Column="1" Grid.RowSpan="3" Content="{Binding SelectedViewModel}"/>

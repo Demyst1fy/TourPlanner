@@ -1,23 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using TourPlanner.DataAccessLayer;
 using TourPlanner.Models;
 
 namespace TourPlanner.BusinessLayer
 {
     internal class TourHandler : ITourHandler {
 
-        public IEnumerable<Tour> GetItems() {
-            // usually querying the disk, or from a DB, or ...
-            return new List<Tour>() {
-                new Tour("Vienna", "Graz"),
-                new Tour("Vienna", "Salzburg"),
-                new Tour("Salzburg", "Vienna"),
-                new Tour("Graz", "Vienna"),
-            };
+        private TourDataAccessObject tourDataAccessObject = new TourDataAccessObject();
+
+        public void AddNewTour(Tour newTour)
+        {
+            tourDataAccessObject.AddNewTour(newTour);
+        }
+
+        public IEnumerable<Tour> GetTours() {
+            return tourDataAccessObject.GetTours();
         }
 
         public IEnumerable<Tour> SearchForTour(string itemName, bool caseSensitive = false) {
-            IEnumerable<Tour> items = GetItems();
+            IEnumerable<Tour> items = GetTours();
 
             if (caseSensitive) {
                 return items.Where(x => x.Name.Contains(itemName));

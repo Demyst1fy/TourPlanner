@@ -4,9 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TourPlanner.Views"
+             xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:AddTourViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Label FontSize="36" HorizontalAlignment="Center" Content="AddTour"></Label>
+        <StackPanel Grid.Row="0" Margin="5,5,5,5">
+            <Label FontSize="24" HorizontalAlignment="Left">New Tour:</Label>
+            <Label>Start</Label>
+            <TextBox FontSize="16" TextDecorations="Underline" Text="{Binding Start}"/>
+            <Label>End</Label>
+            <TextBox FontSize="16" TextDecorations="Underline" Text="{Binding End}"/>
+            <Label>Tour Description</Label>
+            <TextBox FontSize="16" TextDecorations="Underline" Text="{Binding Description}"/>
+            <Button Width="200" HorizontalAlignment="Right" Margin="5,5,5,5" Command="{Binding AddTour}">Add Tour</Button>
+        </StackPanel>
     </Grid>
 </UserControl>

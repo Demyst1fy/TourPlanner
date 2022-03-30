@@ -85,6 +85,7 @@ namespace TourPlanner.ViewModels
             });
 
             this.AddTourCommand = new RelayCommand(o => {
+
                 this.SelectedViewModel = new AddTourViewModel();
             });
 
@@ -100,7 +101,7 @@ namespace TourPlanner.ViewModels
 
         private void FillListView()
         {
-            foreach (Tour item in tourHandler.GetItems())
+            foreach (Tour item in tourHandler.GetTours())
             {
                 Items.Add(item);
             }
