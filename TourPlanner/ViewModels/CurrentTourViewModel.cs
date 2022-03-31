@@ -1,4 +1,8 @@
 ﻿
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using TourPlanner.BusinessLayer;
 using TourPlanner.Models;
 
 namespace TourPlanner.ViewModels
@@ -16,9 +20,19 @@ namespace TourPlanner.ViewModels
             set { currentTour = value; }
         }
 
-        public CurrentTourViewModel(Tour currentTour)
+        public ICommand DeleteTour { get; set; }
+
+        private ITourHandler tourHandler;
+
+        public CurrentTourViewModel(Tour currentTour, ObservableCollection<Tour> items)
         {
             this.currentTour = currentTour;
+            this.tourHandler = TourHandlerSingleton.GetHandler();
+
+            this.DeleteTour = new RelayCommand(o => {
+                this.tourHandler.DeleteTour(CurrentTour);
+                items.Remove(CurrentTour);
+            });
         }
     }
 }

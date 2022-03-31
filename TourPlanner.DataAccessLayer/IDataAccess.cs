@@ -7,5 +7,6 @@ namespace TourPlanner.DataAccessLayer
     {
         public IEnumerable<Tour> GetTours();
         public void AddNewTour(Tour newTour);
+        void DeleteTour(Tour newTour);
     }
 }

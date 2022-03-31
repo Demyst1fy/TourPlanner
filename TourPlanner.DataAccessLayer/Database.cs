@@ -37,5 +37,10 @@ namespace TourPlanner.DataAccessLayer
         {
             tours.Add(newTour);
         }
+
+        public void DeleteTour(Tour newTour)
+        {
+            tours.RemoveAll(x => x.Name == newTour.Name);
+        }
     }
 }

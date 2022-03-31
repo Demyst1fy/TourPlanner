@@ -26,5 +26,10 @@ namespace TourPlanner.BusinessLayer
             }
             return items.Where(x => x.Name.ToLower().Contains(itemName.ToLower()));
         }
+
+        public void DeleteTour(Tour deleteTour)
+        {
+            tourDataAccessObject.DeleteTour(deleteTour);
+        }
     }
 }
