@@ -24,14 +24,15 @@ namespace TourPlanner.ViewModels
 
         private ITourHandler tourHandler;
 
-        public CurrentTourViewModel(Tour currentTour, ObservableCollection<Tour> items)
+        public CurrentTourViewModel(Tour currentTour, ObservableCollection<Tour> items, MainViewModel mainViewModel)
         {
             this.currentTour = currentTour;
-            this.tourHandler = TourHandlerSingleton.GetHandler();
+            this.tourHandler = TourHandler.GetHandler();
 
             this.DeleteTour = new RelayCommand(o => {
                 this.tourHandler.DeleteTour(CurrentTour);
                 items.Remove(CurrentTour);
+                mainViewModel.SelectedViewModel = new WelcomeViewModel();
             });
         }
     }

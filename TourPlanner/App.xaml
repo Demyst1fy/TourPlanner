@@ -12,5 +12,8 @@
         <DataTemplate DataType="{x:Type viewmodels:CurrentTourViewModel}">
             <views:CurrentTourView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:WelcomeViewModel}">
+            <views:WelcomeView/>
+        </DataTemplate>
     </Application.Resources>
 </Application>

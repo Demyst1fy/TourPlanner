@@ -12,21 +12,34 @@ namespace TourPlanner.DataAccessLayer
         private string filePath;
         private List<Tour> tours;
 
-        public FileSystem()
-        {
-            // get filepath data from config file
-            filePath = "...";
-        }
+        private static IDataAccess? _database;
 
-        public IEnumerable<Tour> GetTours()
+        private FileSystem()
         {
-            // select SQL query
+            // get connection data from config file
+            filePath = "...";
+            // establish connection with db
             tours = new List<Tour>() {
                 new Tour("Vienna", "Graz", "Cool Tour"),
                 new Tour("Vienna", "Salzburg", "Awesome Tour"),
                 new Tour("Salzburg", "Vienna", "A Tour"),
                 new Tour("Graz", "Vienna", "Another Tour"),
             };
+        }
+        public static IDataAccess GetFileSystem()
+        {
+            // get connection data from config file
+            if (_database == null)
+            {
+                _database = new FileSystem();
+            }
+            return _database;
+        }
+
+        public IEnumerable<Tour> GetTours()
+        {
+            // get from file
+
 
             return tours;
         }

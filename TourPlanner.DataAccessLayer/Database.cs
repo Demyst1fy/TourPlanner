@@ -7,12 +7,15 @@ using TourPlanner.Models;
 
 namespace TourPlanner.DataAccessLayer
 {
-    class Database : IDataAccess
+    public class Database : IDataAccess
     {
 
         private string connectionString;
         private List<Tour> tours;
-        public Database()
+
+        private static IDataAccess? _database;
+
+        private Database()
         {
             // get connection data from config file
             connectionString = "...";
@@ -23,6 +26,16 @@ namespace TourPlanner.DataAccessLayer
                 new Tour("Salzburg", "Vienna", "A Tour"),
                 new Tour("Graz", "Vienna", "Another Tour"),
             };
+        }
+
+        public static IDataAccess GetDatabase()
+        {
+            // get connection data from config file
+            if (_database == null)
+            {
+                _database = new Database();
+            }
+            return _database;
         }
 
         public IEnumerable<Tour> GetTours()

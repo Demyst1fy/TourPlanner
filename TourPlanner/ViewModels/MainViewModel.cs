@@ -36,8 +36,8 @@ namespace TourPlanner.ViewModels
                 if ((currentTour != value) && (value != null))
                 {
                     currentTour = value;
-                    this.SelectedViewModel = new CurrentTourViewModel(CurrentTour, Items);
                     RaisePropertyChangedEvent(nameof(CurrentTour));
+                    this.SelectedViewModel = new CurrentTourViewModel(CurrentTour, Items, this);
                 }
             }
         }
@@ -46,17 +46,17 @@ namespace TourPlanner.ViewModels
         public ICommand ClearCommand { get; set; }
         public ICommand AddTourCommand { get; set; }
 
-        private BaseViewModel? _selectedViewModel;
+        private BaseViewModel selectedViewModel;
 
         public BaseViewModel SelectedViewModel
         {
             get
             {
-                return _selectedViewModel;
+                return selectedViewModel;
             }
             set
             {
-                _selectedViewModel = value;
+                selectedViewModel = value;
                 RaisePropertyChangedEvent(nameof(SelectedViewModel));
             }
         }
@@ -68,7 +68,7 @@ namespace TourPlanner.ViewModels
             Items = new ObservableCollection<Tour>();
             FillListView();
 
-            this.SelectedViewModel = new AddTourViewModel(Items);
+            this.SelectedViewModel = new WelcomeViewModel();
 
 
             this.SearchCommand = new RelayCommand(o => {
@@ -85,12 +85,14 @@ namespace TourPlanner.ViewModels
                 Items.Clear();
                 SearchName = "";
 
+                this.SelectedViewModel = new WelcomeViewModel();
+
                 FillListView();
             });
 
             this.AddTourCommand = new RelayCommand(o => {
 
-                this.SelectedViewModel = new AddTourViewModel(Items);
+                this.SelectedViewModel = new AddTourViewModel(Items, this);
             
             });
         }

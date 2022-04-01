@@ -5,17 +5,32 @@ using TourPlanner.Models;
 
 namespace TourPlanner.BusinessLayer
 {
-    internal class TourHandler : ITourHandler {
+    public class TourHandler : ITourHandler {
 
-        private TourDataAccessObject tourDataAccessObject = new TourDataAccessObject();
+        private IDataAccess database;
+
+        private static ITourHandler? handler;
+
+        private TourHandler() {
+            database = Database.GetDatabase();
+        }
+
+        public static ITourHandler GetHandler()
+        {
+            if (handler == null)
+            {
+                handler = new TourHandler();
+            }
+            return handler;
+        }
 
         public void AddNewTour(Tour newTour)
         {
-            tourDataAccessObject.AddNewTour(newTour);
+            database.AddNewTour(newTour);
         }
 
         public IEnumerable<Tour> GetTours() {
-            return tourDataAccessObject.GetTours();
+            return database.GetTours();
         }
 
         public IEnumerable<Tour> SearchForTour(string itemName, bool caseSensitive = false) {
@@ -29,7 +44,7 @@ namespace TourPlanner.BusinessLayer
 
         public void DeleteTour(Tour deleteTour)
         {
-            tourDataAccessObject.DeleteTour(deleteTour);
+            database.DeleteTour(deleteTour);
         }
     }
 }

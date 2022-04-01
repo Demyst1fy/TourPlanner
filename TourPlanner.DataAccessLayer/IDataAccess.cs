@@ -3,7 +3,7 @@ using TourPlanner.Models;
 
 namespace TourPlanner.DataAccessLayer
 {
-    interface IDataAccess
+    public interface IDataAccess
     {
         public IEnumerable<Tour> GetTours();
         public void AddNewTour(Tour newTour);

@@ -12,7 +12,7 @@ namespace TourPlanner
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel(TourHandlerSingleton.GetHandler());
+            DataContext = new MainViewModel(TourHandler.GetHandler());
         }
     }
 }

@@ -63,14 +63,16 @@ namespace TourPlanner.ViewModels
 
         private ITourHandler tourHandler;
 
-        public AddTourViewModel(ObservableCollection<Tour> items)
+        public AddTourViewModel(ObservableCollection<Tour> items, MainViewModel mainViewModel)
         {
-            this.tourHandler = TourHandlerSingleton.GetHandler();
+            this.tourHandler = TourHandler.GetHandler();
 
             this.AddTour = new RelayCommand(o => {
                 Tour newTour = new Tour(Start, End, Description);
                 this.tourHandler.AddNewTour(newTour);
                 items.Add(newTour);
+
+                mainViewModel.SelectedViewModel = new WelcomeViewModel();
             });
         }
 
