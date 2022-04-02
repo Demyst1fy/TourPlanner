@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:TourPlanner.Views"
              xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:AddTourViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="800">
     <Grid>
         <StackPanel Grid.Row="0" Margin="5,5,5,5">
             <TextBlock FontSize="24" TextDecorations="Underline" HorizontalAlignment="Left">New Tour:</TextBlock>
@@ -16,7 +16,7 @@
             <TextBox Text="{Binding End}"/>
             <TextBlock FontSize="16" TextDecorations="Underline">Tour Description</TextBlock>
             <TextBox Text="{Binding Description}"/>
-            <Button Width="200" HorizontalAlignment="Right" Margin="5,5,5,5" Command="{Binding AddTour}">Add Tour</Button>
+            <Button Width="100" HorizontalAlignment="Right" Margin="5,5,5,5" Command="{Binding AddCommand}">Add</Button>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TourPlanner.BusinessLayer;
@@ -10,10 +9,26 @@ namespace TourPlanner.ViewModels
     public class MainViewModel : BaseViewModel
     {
         private ITourHandler tourHandler;
-        private Tour currentTour;
-
+        private BaseViewModel selectedViewModel;
         private string searchName;
-        public ObservableCollection<Tour> Items { get; set; }
+        private Tour currentTour;
+        public ObservableCollection<Tour> Items { get; private set; }
+        public ICommand SearchCommand { get; private set; }
+        public ICommand ClearCommand { get; private set; }
+        public ICommand AddTourCommand { get; private set; }
+
+        public BaseViewModel SelectedViewModel
+        {
+            get
+            {
+                return selectedViewModel;
+            }
+            set
+            {
+                selectedViewModel = value;
+                RaisePropertyChangedEvent(nameof(SelectedViewModel));
+            }
+        }
 
         public string SearchName
         {
@@ -37,69 +52,45 @@ namespace TourPlanner.ViewModels
                 {
                     currentTour = value;
                     RaisePropertyChangedEvent(nameof(CurrentTour));
-                    this.SelectedViewModel = new CurrentTourViewModel(CurrentTour, Items, this);
+                    this.SelectedViewModel = new CurrentTourViewModel(this);
                 }
             }
         }
 
-        public ICommand SearchCommand { get; set; }
-        public ICommand ClearCommand { get; set; }
-        public ICommand AddTourCommand { get; set; }
-
-        private BaseViewModel selectedViewModel;
-
-        public BaseViewModel SelectedViewModel
+        public MainViewModel()
         {
-            get
-            {
-                return selectedViewModel;
-            }
-            set
-            {
-                selectedViewModel = value;
-                RaisePropertyChangedEvent(nameof(SelectedViewModel));
-            }
-        }
-
-        public MainViewModel(ITourHandler tourHandler)
-        {
-            this.tourHandler = tourHandler;
-
+            this.tourHandler = TourHandler.GetHandler();
             Items = new ObservableCollection<Tour>();
-            FillListView();
+            FillListView(tourHandler.GetTours());
 
             this.SelectedViewModel = new WelcomeViewModel();
 
-
-            this.SearchCommand = new RelayCommand(o => {
+            this.SearchCommand = new RelayCommand(o =>
+            {
                 IEnumerable<Tour> items = this.tourHandler.SearchForTour(SearchName);
                 Items.Clear();
-                foreach (Tour item in items)
-                {
-                    Items.Add(item);
-                }
+
+                FillListView(items);
             });
 
-            this.ClearCommand = new RelayCommand(o => {
-
+            this.ClearCommand = new RelayCommand(o =>
+            {
                 Items.Clear();
                 SearchName = "";
-
                 this.SelectedViewModel = new WelcomeViewModel();
 
-                FillListView();
+                FillListView(tourHandler.GetTours());
             });
 
-            this.AddTourCommand = new RelayCommand(o => {
-
-                this.SelectedViewModel = new AddTourViewModel(Items, this);
-            
+            this.AddTourCommand = new RelayCommand(o =>
+            {
+                this.SelectedViewModel = new AddTourViewModel(this);
             });
         }
 
-        private void FillListView()
+        private void FillListView(IEnumerable<Tour> items)
         {
-            foreach (Tour item in tourHandler.GetTours())
+            foreach (Tour item in items)
             {
                 Items.Add(item);
             }
