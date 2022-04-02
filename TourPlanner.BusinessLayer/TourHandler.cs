@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using TourPlanner.DataAccessLayer;
 using TourPlanner.Models;
@@ -46,5 +47,12 @@ namespace TourPlanner.BusinessLayer
         {
             database.DeleteTour(deleteTour);
         }
-    }
+
+        public string GetImage(string start, string end)
+        {
+            var apikey = ConfigurationManager.AppSettings["mapquestapikey"];
+
+            return $"https://www.mapquestapi.com/staticmap/v5/map?start={start}&end={end}&key={apikey}";
+        }
+    } 
 }

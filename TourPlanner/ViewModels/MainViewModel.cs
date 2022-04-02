@@ -60,10 +60,9 @@ namespace TourPlanner.ViewModels
         public MainViewModel()
         {
             this.tourHandler = TourHandler.GetHandler();
-            Items = new ObservableCollection<Tour>();
-            FillListView(tourHandler.GetTours());
-
             this.SelectedViewModel = new WelcomeViewModel();
+            this.Items = new ObservableCollection<Tour>();
+            FillListView(tourHandler.GetTours());
 
             this.SearchCommand = new RelayCommand(o =>
             {

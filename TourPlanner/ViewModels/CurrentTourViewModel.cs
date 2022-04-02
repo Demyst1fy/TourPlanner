@@ -33,9 +33,9 @@ namespace TourPlanner.ViewModels
 
         public CurrentTourViewModel(MainViewModel mainViewModel)
         {
-            this.currentTour = mainViewModel.CurrentTour;
             this.tourHandler = TourHandler.GetHandler();
-            this.image = $"https://www.mapquestapi.com/staticmap/v5/map?start={this.currentTour.Start}&end={this.currentTour.End}&key=P6T1ueQLrFgHyNoeG6ewTuebM6uHxMPa";
+            this.currentTour = mainViewModel.CurrentTour;
+            this.image = this.tourHandler.GetImage(this.currentTour.Start, this.currentTour.End);
 
             this.DeleteCommand = new RelayCommand(o => {
                 this.tourHandler.DeleteTour(CurrentTour);

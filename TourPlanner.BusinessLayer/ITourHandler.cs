@@ -7,5 +7,6 @@ namespace TourPlanner.BusinessLayer {
         IEnumerable<Tour> SearchForTour(string itemName, bool caseSensitive = false);
         void AddNewTour(Tour newTour);
         void DeleteTour(Tour deleteTour);
+        string GetImage(string start, string end);
     }
 }
