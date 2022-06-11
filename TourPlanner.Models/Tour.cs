@@ -6,22 +6,33 @@ namespace TourPlanner.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Start { get; set; }
-        public string End { get; set; }
         public string Description { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
         public string TransportType { get; set; }
-        public int Distance { get; set; }
-        public string Time { get; set; }
+        public double Distance { get; set; }
+        public TimeSpan Time { get; set; }
 
-        public Tour(string start, string end, string description, int id = 5, int distance = 100, string transportType = "Car", string time = "4:00:00")
+        public Tour(string name, string description, string from, string to, string transportType, double distance, TimeSpan time)
+        {
+            Name = name;
+            Description = description;
+            From = from;
+            To = to;
+            TransportType = transportType;
+            Distance = distance;
+            Time = time;
+        }
+
+        public Tour(int id, string name, string description, string from, string to, string transportType, double distance, TimeSpan time)
         {
             Id = id;
-            Name = start + "-" + end;
-            Start = start;
-            End = end;
+            Name = name;
             Description = description;
-            Distance = distance;
+            From = from;
+            To = to;
             TransportType = transportType;
+            Distance = distance;
             Time = time;
         }
     }

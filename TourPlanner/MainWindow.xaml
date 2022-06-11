@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="800">
+        Title="MainWindow" MinHeight="800" MinWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -20,17 +20,33 @@
 
         <StackPanel Grid.Column="0" Grid.Row="0" Margin="5,5,5,5">
             <Label Margin="0,0,5,0" VerticalAlignment="Center">Name:</Label>
-            <TextBox VerticalAlignment="Center" Text="{Binding SearchName, Mode=TwoWay}"/>
-            <Button Width="200" Margin="5,5,5,5" Command="{Binding SearchCommand}">Search</Button>
-            <Button Width="200" Margin="5,5,5,5" Command="{Binding ClearCommand}" CommandParameter="Clear">Clear</Button>
+            <TextBox Width="Auto" VerticalAlignment="Center" Text="{Binding SearchName, Mode=TwoWay}"/>
+            <Button Width="Auto" Margin="5,5,5,5" Command="{Binding SearchCommand}">Search</Button>
+            <Button Width="Auto" Margin="5,5,5,5" Command="{Binding ClearCommand}" CommandParameter="Clear">Clear</Button>
         </StackPanel>
 
-        <ListBox Grid.Column="0" Grid.Row="1" Margin="5,5,5,5"
+        <!--<ListBox Grid.Column="0" Grid.Row="1" Margin="5,5,5,5"
                 ItemsSource="{Binding Items}"
-                SelectedItem="{Binding CurrentTour}"
-                DisplayMemberPath="Name" />
+                SelectedItem="{Binding CurrentTour}">
+            <c:ListEx.Columns>
+                <c:ListColumnsCollection>
+                    <c:ListColumn BindingPath="Text1" Header="Text 1" IsResizable="True" Width="200" />
+                    <c:ListColumn BindingPath="Text2" Header="Text 2" IsResizable="True" Width="100" />
+                </c:ListColumnsCollection>
+            </c:ListEx.Columns>
+        </ListBox>-->
+        <ListView Grid.Column="0" Grid.Row="1" Margin="5,5,5,5"
+                ItemsSource="{Binding Items}"
+                SelectedItem="{Binding CurrentTour}" MaxWidth="260">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Transport Type" Width="Auto" DisplayMemberBinding="{Binding TransportType}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
         <StackPanel Grid.Column="0" Grid.Row="2" Margin="5,5,5,5">
-            <Button x:Name="AddTour" Width="200" Margin="5,5,5,5" Command="{Binding AddTourCommand}" CommandParameter="AddTour">Add</Button>
+            <Button x:Name="AddTour" Width="Auto" Margin="5,5,5,5" Command="{Binding AddTourCommand}" CommandParameter="AddTour">Add</Button>
         </StackPanel>
 
         <ContentControl Grid.Column="1" Grid.RowSpan="3" Content="{Binding SelectedViewModel}"/>

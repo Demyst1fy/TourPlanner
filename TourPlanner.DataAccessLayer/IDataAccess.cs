@@ -5,8 +5,9 @@ namespace TourPlanner.DataAccessLayer
 {
     public interface IDataAccess
     {
-        public IEnumerable<Tour> GetTours();
-        public void AddNewTour(Tour newTour);
+        List<Tour> GetTours();
+        void AddNewTour(Tour newTour);
+        void ModifyTour(int id, Tour newTour);
         void DeleteTour(Tour newTour);
     }
 }

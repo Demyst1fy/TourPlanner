@@ -19,12 +19,12 @@ namespace TourPlanner.DataAccessLayer
             // get connection data from config file
             filePath = "...";
             // establish connection with db
-            tours = new List<Tour>() {
+            /*tours = new List<Tour>() {
                 new Tour("Vienna", "Graz", "Cool Tour"),
                 new Tour("Vienna", "Salzburg", "Awesome Tour"),
                 new Tour("Salzburg", "Vienna", "A Tour"),
                 new Tour("Graz", "Vienna", "Another Tour"),
-            };
+            };*/
         }
         public static IDataAccess GetFileSystem()
         {
@@ -36,7 +36,7 @@ namespace TourPlanner.DataAccessLayer
             return _database;
         }
 
-        public IEnumerable<Tour> GetTours()
+        public List<Tour> GetTours()
         {
             // get from file
 
@@ -52,6 +52,11 @@ namespace TourPlanner.DataAccessLayer
         public void DeleteTour(Tour newTour)
         {
             tours.RemoveAll(x => x.Name == newTour.Name);
+        }
+
+        public void ModifyTour(int id, Tour newTour)
+        {
+            throw new NotImplementedException();
         }
     }
 }

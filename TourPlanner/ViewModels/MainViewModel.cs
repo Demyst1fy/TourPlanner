@@ -59,40 +59,44 @@ namespace TourPlanner.ViewModels
 
         public MainViewModel()
         {
-            this.tourHandler = TourHandler.GetHandler();
-            this.SelectedViewModel = new WelcomeViewModel();
-            this.Items = new ObservableCollection<Tour>();
-            FillListView(tourHandler.GetTours());
-
-            this.SearchCommand = new RelayCommand(o =>
-            {
-                IEnumerable<Tour> items = this.tourHandler.SearchForTour(SearchName);
-                Items.Clear();
-
-                FillListView(items);
-            });
-
-            this.ClearCommand = new RelayCommand(o =>
-            {
-                Items.Clear();
-                SearchName = "";
-                this.SelectedViewModel = new WelcomeViewModel();
-
-                FillListView(tourHandler.GetTours());
-            });
-
-            this.AddTourCommand = new RelayCommand(o =>
-            {
-                this.SelectedViewModel = new AddTourViewModel(this);
-            });
-        }
-
-        private void FillListView(IEnumerable<Tour> items)
-        {
-            foreach (Tour item in items)
+            tourHandler = TourHandler.GetHandler();
+            SelectedViewModel = new WelcomeViewModel();
+            Items = new ObservableCollection<Tour>();
+            foreach (Tour item in tourHandler.GetTours())
             {
                 Items.Add(item);
             }
+
+            SearchCommand = new RelayCommand(o =>
+            {
+                if (string.IsNullOrEmpty(SearchName))
+                    return;
+
+                IEnumerable<Tour> items = tourHandler.SearchForTour(SearchName);
+                Items.Clear();
+
+                foreach (Tour item in items)
+                {
+                    Items.Add(item);
+                }
+            });
+
+            ClearCommand = new RelayCommand(o =>
+            {
+                Items.Clear();
+                SearchName = "";
+                SelectedViewModel = new WelcomeViewModel();
+
+                foreach (Tour item in tourHandler.GetTours())
+                {
+                    Items.Add(item);
+                }
+            });
+
+            AddTourCommand = new RelayCommand(o =>
+            {
+                SelectedViewModel = new AddTourViewModel(this);
+            });
         }
     }
 }

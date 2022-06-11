@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Threading.Tasks;
+using TourPlanner.BusinessLayer.JsonClasses;
 using TourPlanner.DataAccessLayer;
 using TourPlanner.Models;
 
@@ -25,6 +28,22 @@ namespace TourPlanner.BusinessLayer
             return handler;
         }
 
+        public async Task<Tour?> GetTourFromAPI(string name, string description, string start, string end, string transportType)
+        {
+            TourDistanceAndTime value = await APIRequest.GetRequest(start, end, transportType);
+
+            /*if (value == null)
+                return null;*/
+
+            double distance = value.Distance;
+            TimeSpan time = TimeSpan.FromSeconds(value.Time);
+
+            if(string.IsNullOrEmpty(name))
+                name = $"{start}-{end}";
+
+            return new Tour(name, description, start, end, transportType, distance, time);
+        }
+
         public void AddNewTour(Tour newTour)
         {
             database.AddNewTour(newTour);
@@ -41,6 +60,11 @@ namespace TourPlanner.BusinessLayer
                 return items.Where(x => x.Name.Contains(itemName));
             }
             return items.Where(x => x.Name.ToLower().Contains(itemName.ToLower()));
+        }
+
+        public void ModifyTour(int id, Tour modifiedTour)
+        {
+            database.ModifyTour(id, modifiedTour);
         }
 
         public void DeleteTour(Tour deleteTour)

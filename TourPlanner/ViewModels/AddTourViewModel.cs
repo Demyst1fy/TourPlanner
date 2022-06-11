@@ -1,5 +1,8 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows;
+using System.Windows.Input;
 using TourPlanner.BusinessLayer;
+using TourPlanner.BusinessLayer.JsonClasses;
 using TourPlanner.Models;
 
 namespace TourPlanner.ViewModels
@@ -7,10 +10,27 @@ namespace TourPlanner.ViewModels
     public class AddTourViewModel : BaseViewModel
     {
         private ITourHandler tourHandler;
+        private Visibility isError;
+
+        private string name;
         private string start;
         private string end;
         private string description;
+        private string transportType;
         public ICommand AddCommand { get; set; }
+
+        public string Name
+        {
+            get { return name; }
+            set
+            {
+                if ((name != value))
+                {
+                    name = value;
+                    RaisePropertyChangedEvent(nameof(Name));
+                }
+            }
+        }
 
         public string Start
         {
@@ -51,14 +71,52 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        public string TransportType
+        {
+            get { return transportType; }
+            set
+            {
+                if ((transportType != value))
+                {
+                    transportType = value;
+                    RaisePropertyChangedEvent(nameof(TransportType));
+                }
+            }
+        }
+        public Visibility IsError
+        {
+            get
+            {
+                return isError;
+            }
+            set
+            {
+                isError = value;
+                RaisePropertyChangedEvent(nameof(IsError));
+            }
+        }
+
         public AddTourViewModel(MainViewModel mainViewModel)
         {
-            this.tourHandler = TourHandler.GetHandler();
+            tourHandler = TourHandler.GetHandler();
+            IsError = Visibility.Hidden;
 
-            this.AddCommand = new RelayCommand(o => {
-                Tour newTour = new Tour(Start, End, Description);
-                this.tourHandler.AddNewTour(newTour);
-                mainViewModel.Items.Add(newTour);
+            AddCommand = new RelayCommand(async o => {
+                Tour newTour = await tourHandler.GetTourFromAPI(Name, Description, Start, End, TransportType);
+
+                /*if (newTour == null)
+                {
+                    IsError = Visibility.Visible;
+                    return;
+                }*/
+
+                tourHandler.AddNewTour(newTour);
+
+                mainViewModel.Items.Clear();
+                foreach (Tour item in tourHandler.GetTours())
+                {
+                    mainViewModel.Items.Add(item);
+                }
                 mainViewModel.SelectedViewModel = new WelcomeViewModel();
             });
         }

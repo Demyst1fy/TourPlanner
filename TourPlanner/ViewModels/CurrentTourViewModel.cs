@@ -18,7 +18,9 @@ namespace TourPlanner.ViewModels
             {
                 return currentTour;
             }
-            set { currentTour = value; }
+            set { currentTour = value;
+                RaisePropertyChangedEvent(nameof(CurrentTour)); 
+            }
         }
 
         public string Image
@@ -33,13 +35,21 @@ namespace TourPlanner.ViewModels
 
         public CurrentTourViewModel(MainViewModel mainViewModel)
         {
-            this.tourHandler = TourHandler.GetHandler();
-            this.currentTour = mainViewModel.CurrentTour;
-            this.image = this.tourHandler.GetImage(this.currentTour.Start, this.currentTour.End);
+            tourHandler = TourHandler.GetHandler();
+            CurrentTour = mainViewModel.CurrentTour;
+            Image = tourHandler.GetImage(CurrentTour.From, CurrentTour.To);
 
-            this.DeleteCommand = new RelayCommand(o => {
-                this.tourHandler.DeleteTour(CurrentTour);
-                mainViewModel.Items.Remove(CurrentTour);
+            ModifyCommand = new RelayCommand(o => {
+                mainViewModel.SelectedViewModel = new ModifyTourViewModel(mainViewModel);
+            });
+
+            DeleteCommand = new RelayCommand(o => {
+                tourHandler.DeleteTour(CurrentTour);
+                mainViewModel.Items.Clear();
+                foreach (Tour item in tourHandler.GetTours())
+                {
+                    mainViewModel.Items.Add(item);
+                }
                 mainViewModel.SelectedViewModel = new WelcomeViewModel();
             });
         }
