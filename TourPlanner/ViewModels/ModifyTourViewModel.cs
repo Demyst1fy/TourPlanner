@@ -4,6 +4,7 @@ using System.Windows.Input;
 using TourPlanner.BusinessLayer;
 using TourPlanner.BusinessLayer.JsonClasses;
 using TourPlanner.Models;
+using TourPlanner.Utils;
 
 namespace TourPlanner.ViewModels
 {
@@ -56,12 +57,9 @@ namespace TourPlanner.ViewModels
                 }*/
 
                 this.tourHandler.ModifyTour(CurrentTour.Id, modifiedTour);
-                mainViewModel.Items.Clear();
-                foreach (Tour item in tourHandler.GetTours())
-                {
-                    mainViewModel.Items.Add(item);
-                }
-                mainViewModel.SelectedViewModel = new WelcomeViewModel();
+
+                mainViewModel.RefreshTourList(tourHandler.GetTours());
+                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel);
             });
         }
     }

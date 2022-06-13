@@ -5,27 +5,43 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TourPlanner.Views"
              xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:ModifyTourViewModel}"
-             mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="800">
+             mc:Ignorable="d">
     <Grid>
-        <StackPanel Grid.Row="0" Margin="5,5,5,5">
-            <TextBlock FontSize="24" TextDecorations="Underline" HorizontalAlignment="Left">Modify Tour:</TextBlock>
-            <TextBlock FontSize="16" TextDecorations="Underline">Name:</TextBlock>
-            <TextBox Text="{Binding CurrentTour.Name}"/>
-            <TextBlock FontSize="16" TextDecorations="Underline">Start:</TextBlock>
-            <TextBox Text="{Binding CurrentTour.From}" IsEnabled="False"/>
-            <TextBlock FontSize="16" TextDecorations="Underline">End:</TextBlock>
-            <TextBox Text="{Binding CurrentTour.To}" IsEnabled="False"/>
-            <TextBlock FontSize="16" TextDecorations="Underline">Tour Description:</TextBlock>
-            <TextBox Text="{Binding CurrentTour.Description}"/>
-            <TextBlock FontSize="16" TextDecorations="Underline">Transport Type by:</TextBlock>
-            <ComboBox SelectedValue="{Binding CurrentTour.TransportType}" SelectedValuePath="Content">
-                <ComboBoxItem>Car</ComboBoxItem>
-                <ComboBoxItem>Foot</ComboBoxItem>
-                <ComboBoxItem>Bicycle</ComboBoxItem>
-            </ComboBox>
-            <Button Width="100" HorizontalAlignment="Right" Margin="5,5,5,5" Command="{Binding ModifyCommand}">Modify</Button>
-            <TextBlock Visibility="{Binding IsError}" FontSize="16" TextDecorations="Underline">ERROR</TextBlock>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="5,5,5,5">
+            <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold">Modify Tour:</TextBlock>
+            <StackPanel>
+                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold"><LineBreak/>Name:</TextBlock>
+                <TextBox FontSize="16" Text="{Binding CurrentTour.Name}"/>
+            </StackPanel>
+            <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold"><LineBreak/>Start - End:</TextBlock>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" IsEnabled="False" FontSize="16" Text="{Binding CurrentTour.From}" />
+                <TextBlock Grid.Column="1" Text=" - "/>
+                <TextBox Grid.Column="2" IsEnabled="False" FontSize="16" Text="{Binding CurrentTour.To}"/>
+            </Grid>
+            <StackPanel>
+                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold"><LineBreak/>Tour Description:</TextBlock>
+                <TextBox FontSize="16" Height="100" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="{Binding CurrentTour.Description}"/>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold"><LineBreak/>Transport Type by:</TextBlock>
+                <ComboBox FontSize="16" SelectedValue="{Binding CurrentTour.TransportType}" SelectedValuePath="Content">
+                    <ComboBoxItem IsSelected="True">Car</ComboBoxItem>
+                    <ComboBoxItem>Foot</ComboBoxItem>
+                    <ComboBoxItem>Bicycle</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            <Button FontSize="16" Width="100" HorizontalAlignment="Right" Margin="5,5,5,5" Command="{Binding ModifyCommand}">Modify</Button>
+            <TextBlock Visibility="{Binding IsError}" FontSize="16" TextDecorations="Underline"><LineBreak/>ERROR</TextBlock>
         </StackPanel>
     </Grid>
 </UserControl>

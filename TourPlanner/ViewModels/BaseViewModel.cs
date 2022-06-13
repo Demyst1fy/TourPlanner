@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using TourPlanner.Models;
 
-namespace TourPlanner.ViewModels 
+namespace TourPlanner.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged 
     {

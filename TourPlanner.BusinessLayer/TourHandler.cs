@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using TourPlanner.BusinessLayer.JsonClasses;
-using TourPlanner.DataAccessLayer;
+using TourPlanner.DataAccessLayer.Database;
+using TourPlanner.DataAccessLayer.FileSystem;
 using TourPlanner.Models;
 
 namespace TourPlanner.BusinessLayer
 {
     public class TourHandler : ITourHandler {
 
-        private IDataAccess database;
+        private IDatabase database;
+        private IFileSystem fileSystem;
 
         private static ITourHandler? handler;
 
         private TourHandler() {
             database = Database.GetDatabase();
+            fileSystem = FileSystem.GetFileSystem();
         }
 
         public static ITourHandler GetHandler()
@@ -30,7 +35,7 @@ namespace TourPlanner.BusinessLayer
 
         public async Task<Tour?> GetTourFromAPI(string name, string description, string start, string end, string transportType)
         {
-            TourDistanceAndTime value = await APIRequest.GetRequest(start, end, transportType);
+            TourAPIData value = await APIRequest.RequestDirection(start, end, transportType);
 
             /*if (value == null)
                 return null;*/
@@ -38,7 +43,7 @@ namespace TourPlanner.BusinessLayer
             double distance = value.Distance;
             TimeSpan time = TimeSpan.FromSeconds(value.Time);
 
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 name = $"{start}-{end}";
 
             return new Tour(name, description, start, end, transportType, distance, time);
@@ -47,10 +52,28 @@ namespace TourPlanner.BusinessLayer
         public void AddNewTour(Tour newTour)
         {
             database.AddNewTour(newTour);
+
+            int currentIncrementValue = database.GetCurrentIncrementValue();
+            fileSystem.SaveImageFile(newTour.From, newTour.To, currentIncrementValue);
+        }
+
+        public void AddNewTourLog(int tourId, TourLog newTourLog)
+        {
+            database.AddNewTourLog(tourId, newTourLog);
         }
 
         public IEnumerable<Tour> GetTours() {
             return database.GetTours();
+        }
+
+        public IEnumerable<TourLog> GetTourLogs(Tour tour)
+        {
+            return database.GetTourLogs(tour);
+        }
+
+        public ImageSource GetImageFile(Tour tour)
+        {
+            return fileSystem.LoadImageFile(tour);
         }
 
         public IEnumerable<Tour> SearchForTour(string itemName, bool caseSensitive = false) {
@@ -67,16 +90,20 @@ namespace TourPlanner.BusinessLayer
             database.ModifyTour(id, modifiedTour);
         }
 
+        public void ModifyTourLog(TourLog tourLog)
+        {
+            database.ModifyTourLog(tourLog);
+        }
+
         public void DeleteTour(Tour deleteTour)
         {
             database.DeleteTour(deleteTour);
+            fileSystem.DeleteImageFile(deleteTour);
         }
 
-        public string GetImage(string start, string end)
+        public void DeleteTourLog(TourLog deleteTourLog)
         {
-            var apikey = ConfigurationManager.AppSettings["mapquestapikey"];
-
-            return $"https://www.mapquestapi.com/staticmap/v5/map?start={start}&end={end}&key={apikey}";
+            database.DeleteTourLog(deleteTourLog);
         }
     } 
 }

@@ -1,15 +1,19 @@
 ﻿using Newtonsoft.Json;
 using System.Configuration;
+using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Drawing;
 using TourPlanner.BusinessLayer.JsonClasses;
 using TourPlanner.Models;
+using System;
 
 namespace TourPlanner.BusinessLayer
 {
     public static class APIRequest
     {
-        public static async Task<TourDistanceAndTime?> GetRequest(string from, string to, string transportType)
+        public static async Task<TourAPIData?> RequestDirection(string from, string to, string transportType)
         {
             HttpClient client = new();
 
@@ -49,7 +53,7 @@ namespace TourPlanner.BusinessLayer
             double distance = myDeserializedClass.route.distance;
             int time = myDeserializedClass.route.time;
 
-            return new TourDistanceAndTime(distance, time);
+            return new TourAPIData(distance, time);
         }
     }
 }

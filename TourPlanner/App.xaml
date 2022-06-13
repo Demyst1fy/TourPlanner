@@ -9,6 +9,9 @@
         <DataTemplate DataType="{x:Type viewmodels:AddTourViewModel}">
             <views:AddTourView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:AddTourLogViewModel}">
+            <views:AddTourLogView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:CurrentTourViewModel}">
             <views:CurrentTourView/>
         </DataTemplate>
@@ -17,6 +20,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:ModifyTourViewModel}">
             <views:ModifyTourView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:ModifyTourLogViewModel}">
+            <views:ModifyTourLogView/>
         </DataTemplate>
     </Application.Resources>
 </Application>
