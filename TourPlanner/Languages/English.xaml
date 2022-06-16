@@ -1,0 +1,47 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:sys="clr-namespace:System;assembly=netstandard">
+    <sys:String x:Key="StringTitle">Tour Planner</sys:String>
+    <sys:String x:Key="StringWelcome">Welcome to your Tour Planner!</sys:String>
+    <sys:String x:Key="StringSelectLanguage">Current Language: English</sys:String>
+    <sys:String x:Key="StringSearchTour">Search Tour:</sys:String>
+    <sys:String x:Key="StringNewTour">New Tour:</sys:String>
+    <sys:String x:Key="StringAdd">Add</sys:String>
+    <sys:String x:Key="StringSearch">Search</sys:String>
+    <sys:String x:Key="StringClear">Clear</sys:String>
+    <sys:String x:Key="StringModify">Modify</sys:String>
+    <sys:String x:Key="StringAddTour">Add Tour</sys:String>
+    <sys:String x:Key="StringModifyTour">Modify Tour</sys:String>
+    <sys:String x:Key="StringDeleteTour">Delete Tour</sys:String>
+    <sys:String x:Key="StringTourName">Name</sys:String>
+    <sys:String x:Key="StringTourStart">Start</sys:String>
+    <sys:String x:Key="StringTourDestination">Destination</sys:String>
+    <sys:String x:Key="StringTourDistance">Distance</sys:String>
+    <sys:String x:Key="StringTourTime">Time</sys:String>
+    <sys:String x:Key="StringTourDescription">Tour Description</sys:String>
+    <sys:String x:Key="StringTourTransportType">Transport Type</sys:String>
+    <sys:String x:Key="StringTourCar">Car</sys:String>
+    <sys:String x:Key="StringTourFoot">Foot</sys:String>
+    <sys:String x:Key="StringTourBicycle">Bicycle</sys:String>
+    <sys:String x:Key="StringTourPopularity">Popularity</sys:String>
+    <sys:String x:Key="StringTourChildFriendliness">Child-Friendliness</sys:String>
+    <sys:String x:Key="StringTourInformation">Information</sys:String>
+    <sys:String x:Key="StringTourMap">Map</sys:String>
+    <sys:String x:Key="StringTourLogsCurrent">Current Log</sys:String>
+    <sys:String x:Key="StringNewLogFor">New Log for: </sys:String>
+    <sys:String x:Key="StringModifyLogFor">Modify Log for: </sys:String>
+    <sys:String x:Key="StringTourLogs">Logs</sys:String>
+    <sys:String x:Key="StringTourLogsDate">Date/Time</sys:String>
+    <sys:String x:Key="StringTourLogsDuration">Duration</sys:String>
+    <sys:String x:Key="StringTourLogsDifficulty">Difficulty</sys:String>
+    <sys:String x:Key="StringTourLogsDifficultyEasy">Easy</sys:String>
+    <sys:String x:Key="StringTourLogsDifficultyMedium">Medium</sys:String>
+    <sys:String x:Key="StringTourLogsDifficultyHard">Hard</sys:String>
+    <sys:String x:Key="StringTourLogsRating">Rating</sys:String>
+    <sys:String x:Key="StringTourLogsComment">Comment</sys:String>
+    <sys:String x:Key="StringAddTourLog">Add Log</sys:String>
+    <sys:String x:Key="StringModifyTourLog">Modify Log</sys:String>
+    <sys:String x:Key="StringDeleteTourLog">Delete Log</sys:String>
+    <sys:String x:Key="StringErrorNotFilled">Start and Destination must be filled.</sys:String>
+    <sys:String x:Key="StringErrorInvalidValuesResponse">Invalid Values came as response. &#13;(Distance = 0 or Time = 0)</sys:String>
+</ResourceDictionary>

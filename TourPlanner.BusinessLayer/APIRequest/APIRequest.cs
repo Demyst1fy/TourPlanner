@@ -8,6 +8,7 @@ using System.Drawing;
 using TourPlanner.BusinessLayer.JsonClasses;
 using TourPlanner.Models;
 using System;
+using System.Collections.Generic;
 
 namespace TourPlanner.BusinessLayer
 {
@@ -15,9 +16,9 @@ namespace TourPlanner.BusinessLayer
     {
         public static async Task<TourAPIData?> RequestDirection(string from, string to, string transportType)
         {
-            HttpClient client = new();
+            HttpClient client = new HttpClient();
 
-            var apikey = ConfigurationManager.AppSettings["mapquestapikey"];
+            var apikey = ConfigurationManager.AppSettings["MapquestAPIKey"];
 
             string transportTypeOnUrl;
             switch (transportType)
@@ -46,14 +47,17 @@ namespace TourPlanner.BusinessLayer
                 $"&to={to}");
 
             response.EnsureSuccessStatusCode();
+
             string responseBody = await response.Content.ReadAsStringAsync();
 
             Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(responseBody);
 
+            int statusCode = myDeserializedClass.info.statuscode;
+            List<object> messages = myDeserializedClass.info.messages;
             double distance = myDeserializedClass.route.distance;
             int time = myDeserializedClass.route.time;
 
-            return new TourAPIData(distance, time);
+            return new TourAPIData(statusCode, messages, distance, time);
         }
     }
 }

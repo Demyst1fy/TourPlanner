@@ -19,7 +19,7 @@ namespace TourPlanner.DataAccessLayer.FileSystem
 
         private FileSystem()
         {
-            _path = ConfigurationManager.AppSettings["mapimagespath"];
+            _path = ConfigurationManager.AppSettings["MapImagesPath"];
         }
 
         public static IFileSystem GetFileSystem()
@@ -31,9 +31,9 @@ namespace TourPlanner.DataAccessLayer.FileSystem
             return _fileSystem;
         }
 
-        public void SaveImageFile(string start, string end, int currentIncrementValue)
+        public void SaveImageFile(string start, string destination, int currentIncrementValue)
         {
-            var apikey = ConfigurationManager.AppSettings["mapquestapikey"];
+            var apikey = ConfigurationManager.AppSettings["MapquestAPIKey"];
 
             Directory.CreateDirectory(_path);
             var file = $"{_path}/{currentIncrementValue}.png";
@@ -42,7 +42,7 @@ namespace TourPlanner.DataAccessLayer.FileSystem
             client.DownloadFile(
                 new Uri($"https://www.mapquestapi.com/staticmap/v5/map?" +
                 $"start={start}" +
-                $"&end={end}" +
+                $"&end={destination}" +
                 $"&key={apikey}" +
                 $"&size=640,480@2x"
                 ), file);
@@ -62,14 +62,12 @@ namespace TourPlanner.DataAccessLayer.FileSystem
             bitmap.EndInit();
             bitmap.Freeze();
 
-            bitmap.Freeze();
             return bitmap;
         }
 
         public void DeleteImageFile(Tour deleteTour)
         {
-            var directory = ConfigurationManager.AppSettings["mapimagespath"];
-            var filePath = $"{directory}/{deleteTour.Id}.png";
+            var filePath = $"{_path}/{deleteTour.Id}.png";
 
             if (File.Exists(filePath))
                 File.Delete(filePath);

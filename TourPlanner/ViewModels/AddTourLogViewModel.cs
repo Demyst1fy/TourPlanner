@@ -2,9 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using TourPlanner.BusinessLayer;
-using TourPlanner.BusinessLayer.JsonClasses;
 using TourPlanner.Models;
-using TourPlanner.Models.Enums;
 using TourPlanner.Utils;
 
 namespace TourPlanner.ViewModels
@@ -12,11 +10,10 @@ namespace TourPlanner.ViewModels
     public class AddTourLogViewModel : BaseViewModel
     {
         private ITourHandler tourHandler;
-        private Visibility isError;
         private Tour currentTour;
 
         private string comment;
-        private Difficulty difficulty;
+        private string difficulty;
         private TimeSpan totalTime;
         private int rating;
         public ICommand AddCommand { get; set; }
@@ -47,7 +44,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
-        public Difficulty Difficulty
+        public string Difficulty
         {
             get { return difficulty; }
             set
@@ -86,41 +83,36 @@ namespace TourPlanner.ViewModels
             }
         }
 
-        public Visibility IsError
-        {
-            get
-            {
-                return isError;
-            }
-            set
-            {
-                isError = value;
-                RaisePropertyChangedEvent(nameof(IsError));
-            }
-        }
-
         public AddTourLogViewModel(MainViewModel mainViewModel)
         {
-            Difficulty = Difficulty.Easy;
+            Difficulty = (string)Application.Current.Resources["StringTourLogsDifficultyEasy"];
             Rating = 5;
 
             tourHandler = TourHandler.GetHandler();
-            IsError = Visibility.Hidden;
             CurrentTour = mainViewModel.CurrentTour;
 
             AddCommand = new RelayCommand(o => {
-                TourLog newTourLog = new TourLog(Comment, Difficulty, TotalTime, Rating);
 
-                /*if (newTour == null)
-                {
-                    IsError = Visibility.Visible;
-                    return;
-                }*/
+                ChangeDifficultyToPassBL();
+
+                TourLog newTourLog = new TourLog(Comment, Difficulty, TotalTime, Rating);
 
                 tourHandler.AddNewTourLog(CurrentTour.Id, newTourLog);
 
                 mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel);
             });
+        }
+
+        public void ChangeDifficultyToPassBL()
+        {
+            if (Difficulty == (string)Application.Current.Resources["StringTourLogsDifficultyEasy"])
+                Difficulty = "Easy";
+            else if (Difficulty == (string)Application.Current.Resources["StringTourLogsDifficultyMedium"])
+                Difficulty = "Medium";
+            else if (Difficulty == (string)Application.Current.Resources["StringTourLogsDifficultyHard"])
+                Difficulty = "Hard";
+            else
+                Difficulty = "Easy";
         }
     }
 }

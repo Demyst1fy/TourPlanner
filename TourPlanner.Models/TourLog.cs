@@ -1,5 +1,4 @@
 ﻿using System;
-using TourPlanner.Models.Enums;
 
 namespace TourPlanner.Models
 {
@@ -9,11 +8,11 @@ namespace TourPlanner.Models
         public int Id { get; set; }
         public DateTime Datetime { get; set; }
         public string Comment { get; set; }
-        public Difficulty Difficulty { get; set; }
+        public string Difficulty { get; set; }
         public TimeSpan TotalTime { get; set; }
         public int Rating { get; set; }
 
-        public TourLog(int id, string comment, Difficulty difficulty, TimeSpan totalTime, int rating)
+        public TourLog(int id, string comment, string difficulty, TimeSpan totalTime, int rating)
         {
             Id = id;
             Datetime = DateTime.Now;
@@ -23,7 +22,7 @@ namespace TourPlanner.Models
             Rating = rating;
         }
 
-        public TourLog(int id, DateTime datetime, string comment, Difficulty difficulty, TimeSpan totalTime, int rating)
+        public TourLog(int id, DateTime datetime, string comment, string difficulty, TimeSpan totalTime, int rating)
         {
             Id = id;
             Datetime = datetime;
@@ -33,7 +32,7 @@ namespace TourPlanner.Models
             Rating = rating;
         }
 
-        public TourLog(string comment, Difficulty difficulty, TimeSpan totalTime, int rating)
+        public TourLog(string comment, string difficulty, TimeSpan totalTime, int rating)
         {
             Datetime = DateTime.Now;
             Comment = comment;

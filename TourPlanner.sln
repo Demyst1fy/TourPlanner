@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.BusinessLayer",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.Models", "TourPlanner.Models\TourPlanner.Models.csproj", "{27FD5BBB-AA47-406B-AE9A-7C5F1892CF28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.DataAccessLayer", "TourPlanner.DataAccessLayer\TourPlanner.DataAccessLayer.csproj", "{6D932B99-1B5E-4C6C-B7DE-88120B2A18ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TourPlanner.DataAccessLayer", "TourPlanner.DataAccessLayer\TourPlanner.DataAccessLayer.csproj", "{6D932B99-1B5E-4C6C-B7DE-88120B2A18ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourPlanner.Unittest", "TourPlanner.Unittest\TourPlanner.Unittest.csproj", "{2C291958-D552-48D5-8C9B-F759DB2BB3AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{6D932B99-1B5E-4C6C-B7DE-88120B2A18ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D932B99-1B5E-4C6C-B7DE-88120B2A18ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D932B99-1B5E-4C6C-B7DE-88120B2A18ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C291958-D552-48D5-8C9B-F759DB2BB3AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C291958-D552-48D5-8C9B-F759DB2BB3AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C291958-D552-48D5-8C9B-F759DB2BB3AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C291958-D552-48D5-8C9B-F759DB2BB3AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

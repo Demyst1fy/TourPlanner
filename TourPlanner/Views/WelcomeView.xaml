@@ -6,7 +6,9 @@
              xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:WelcomeViewModel}"
              mc:Ignorable="d">
     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-        <TextBlock FontSize="36" TextAlignment="Center">Welcome to your Tour Planner!</TextBlock>
-        <Button Margin="5,5,5,5" Width="100" Command="{Binding AddTourCommand}">Add Tour</Button>
+        <TextBlock FontSize="36" TextAlignment="Center" Text="{DynamicResource StringWelcome}"/>
+        <Button Margin="5,5,5,5" Width="100" Command="{Binding AddTourCommand}">
+            <TextBlock Text="{DynamicResource StringAddTour}"/>
+        </Button>
     </StackPanel>
 </UserControl>

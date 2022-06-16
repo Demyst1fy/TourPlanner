@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using TourPlanner.BusinessLayer;
@@ -12,10 +13,11 @@ namespace TourPlanner.ViewModels
     {
         private ITourHandler tourHandler;
         private Visibility isError;
+        private string errorText;
 
         private string name;
         private string start;
-        private string end;
+        private string destination;
         private string description;
         private string transportType;
         public ICommand AddCommand { get; set; }
@@ -46,15 +48,15 @@ namespace TourPlanner.ViewModels
             }
         }
 
-        public string End
+        public string Destination
         {
-            get { return end; }
+            get { return destination; }
             set
             {
-                if ((end != value))
+                if ((destination != value))
                 {
-                    end = value;
-                    RaisePropertyChangedEvent(nameof(End));
+                    destination = value;
+                    RaisePropertyChangedEvent(nameof(Destination));
                 }
             }
         }
@@ -84,6 +86,20 @@ namespace TourPlanner.ViewModels
                 }
             }
         }
+
+        public string ErrorText
+        {
+            get
+            {
+                return errorText;
+            }
+            set
+            {
+                errorText = value;
+                RaisePropertyChangedEvent(nameof(ErrorText));
+            }
+        }
+
         public Visibility IsError
         {
             get
@@ -101,22 +117,57 @@ namespace TourPlanner.ViewModels
         {
             tourHandler = TourHandler.GetHandler();
             IsError = Visibility.Hidden;
-            TransportType = "Car";
+            TransportType = (string)Application.Current.Resources["StringTourCar"];
 
             AddCommand = new RelayCommand(async o => {
-                Tour newTour = await tourHandler.GetTourFromAPI(Name, Description, Start, End, TransportType);
-
-                /*if (newTour == null)
+                if(string.IsNullOrEmpty(Start) || string.IsNullOrEmpty(Destination))
                 {
+                    ErrorText = (string)Application.Current.Resources["StringErrorNotFilled"];
                     IsError = Visibility.Visible;
                     return;
-                }*/
+                }
+
+                ChangeTransportTypeToPassBL();
+
+                TourAPIData tourAPIdata = await APIRequest.RequestDirection(Start, Destination, TransportType);
+
+                int statusCode = tourAPIdata.StatusCode;
+                List<object> messages = tourAPIdata.Message;
+                double distance = tourAPIdata.Distance;
+                TimeSpan time = TimeSpan.FromSeconds(tourAPIdata.Time);
+
+                if (statusCode != 0 || messages.Count != 0)
+                {
+                    ErrorText = $"Response: {statusCode} {Environment.NewLine}Message: {messages[0]}";
+                    IsError = Visibility.Visible;
+                    return;
+                }
+
+                if (distance == 0.0 || time == TimeSpan.Parse("00:00:00"))
+                {
+                    ErrorText = (string)Application.Current.Resources["StringErrorInvalidValuesResponse"];
+                    IsError = Visibility.Visible;
+                    return;
+                }
+
+                Tour newTour = new Tour(Name, Description, Start, Destination, TransportType, distance, time);
 
                 tourHandler.AddNewTour(newTour);
 
                 mainViewModel.RefreshTourList(tourHandler.GetTours());
                 mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel);
             });
+        }
+        public void ChangeTransportTypeToPassBL()
+        {
+            if (TransportType == (string)Application.Current.Resources["StringTourCar"])
+                TransportType = "Car";
+            else if (TransportType == (string)Application.Current.Resources["StringTourFoot"])
+                TransportType = "Foot";
+            else if (TransportType == (string)Application.Current.Resources["StringTourBicycle"])
+                TransportType = "Bicycle";
+            else
+                TransportType = "Car";
         }
     }
 }

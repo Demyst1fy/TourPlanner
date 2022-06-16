@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TourPlanner.Views"
+             xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
              xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:AddTourLogViewModel}"
              mc:Ignorable="d">
     <Grid>
@@ -12,21 +12,25 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Row="0" Margin="5,5,5,5">
-            <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{Binding CurrentTour.Name, StringFormat=New Log for: {0}}"/>
+            <WrapPanel>
+                <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{DynamicResource StringNewLogFor}"/>
+                <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text=" "/>
+                <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{Binding CurrentTour.Name}"/>
+            </WrapPanel>
             <StackPanel>
-                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold"><LineBreak/>Difficulty:</TextBlock>
-                <ComboBox SelectedValue="{Binding Difficulty}" SelectedValuePath="Content">
-                    <ComboBoxItem IsSelected="True">Easy</ComboBoxItem>
-                    <ComboBoxItem>Medium</ComboBoxItem>
-                    <ComboBoxItem>Hard</ComboBoxItem>
+                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsDifficulty}"/>
+                <ComboBox FontSize="16" SelectedValue="{Binding Difficulty}" SelectedValuePath="Content">
+                    <ComboBoxItem IsSelected="True" Content="{DynamicResource StringTourLogsDifficultyEasy}"/>
+                    <ComboBoxItem Content="{DynamicResource StringTourLogsDifficultyMedium}"/>
+                    <ComboBoxItem Content="{DynamicResource StringTourLogsDifficultyHard}"/>
                 </ComboBox>
             </StackPanel>
             <StackPanel>
-                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold"><LineBreak/>Total Time:</TextBlock>
-                <TextBox FontSize="16" Text="{Binding TotalTime}"/>
+                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsDuration}"/>
+                <wpfTool:TimeSpanUpDown FontSize="16" Text="{Binding TotalTime}"/>
             </StackPanel>
             <StackPanel>
-                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold"><LineBreak/>Rating:</TextBlock>
+                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsRating}"/>
                 <ComboBox FontSize="16" SelectedValue="{Binding Rating}" SelectedValuePath="Content">
                     <ComboBoxItem IsSelected="True">5</ComboBoxItem>
                     <ComboBoxItem>4</ComboBoxItem>
@@ -36,13 +40,13 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel>
-                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold"><LineBreak/>Comment:</TextBlock>
+                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsComment}"/>
                 <TextBox FontSize="16" Height="100" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Text="{Binding Comment}"/>
             </StackPanel>
-            
-            <Button FontSize="16" Width="100" HorizontalAlignment="Right" Margin="5,5,5,5" Command="{Binding AddCommand}">Add</Button>
-            <TextBlock Visibility="{Binding IsError}" FontSize="16" TextDecorations="Underline">ERROR</TextBlock>
 
+            <Button FontSize="16" Width="100" HorizontalAlignment="Right" Margin="5,5,5,5" Command="{Binding AddCommand}">
+                <TextBlock Text="{DynamicResource StringAdd}"/>
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>

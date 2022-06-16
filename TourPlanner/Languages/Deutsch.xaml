@@ -1,0 +1,47 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:sys="clr-namespace:System;assembly=netstandard">
+    <sys:String x:Key="StringTitle">Tour Planner</sys:String>
+    <sys:String x:Key="StringWelcome">Willkommen bei Ihrem Tour Planner!</sys:String>
+    <sys:String x:Key="StringSelectLanguage">Ausgewählte Sprache: Deutsch</sys:String>
+    <sys:String x:Key="StringSearchTour">Tour suchen:</sys:String>
+    <sys:String x:Key="StringNewTour">Neuer Tour:</sys:String>
+    <sys:String x:Key="StringAdd">Hinzufügen</sys:String>
+    <sys:String x:Key="StringSearch">Suchen</sys:String>
+    <sys:String x:Key="StringClear">Zurücksetzen</sys:String>
+    <sys:String x:Key="StringModify">Ändern</sys:String>
+    <sys:String x:Key="StringAddTour">Tour hinzufügen</sys:String>
+    <sys:String x:Key="StringModifyTour">Tour ändern</sys:String>
+    <sys:String x:Key="StringDeleteTour">Tour löschen</sys:String>
+    <sys:String x:Key="StringTourName">Name</sys:String>
+    <sys:String x:Key="StringTourStart">Beginn</sys:String>
+    <sys:String x:Key="StringTourDestination">Ziel</sys:String>
+    <sys:String x:Key="StringTourDistance">Distanz</sys:String>
+    <sys:String x:Key="StringTourTime">Zeit</sys:String>
+    <sys:String x:Key="StringTourDescription">Tour Beschreibung</sys:String>
+    <sys:String x:Key="StringTourTransportType">Transportart</sys:String>
+    <sys:String x:Key="StringTourCar">Auto</sys:String>
+    <sys:String x:Key="StringTourFoot">zu Fuß</sys:String>
+    <sys:String x:Key="StringTourBicycle">Fahrrad</sys:String>
+    <sys:String x:Key="StringTourPopularity">Popularität</sys:String>
+    <sys:String x:Key="StringTourChildFriendliness">Kinderfreundlichkeit</sys:String>
+    <sys:String x:Key="StringTourInformation">Information</sys:String>
+    <sys:String x:Key="StringTourMap">Karte</sys:String>
+    <sys:String x:Key="StringTourLogsCurrent">Ausgewählte Aufzeichnung</sys:String>
+    <sys:String x:Key="StringNewLogFor">Neuer Log für:</sys:String>
+    <sys:String x:Key="StringModifyLogFor">Log ändern für:</sys:String>
+    <sys:String x:Key="StringTourLogs">Aufzeichnungen</sys:String>
+    <sys:String x:Key="StringTourLogsDate">Datum/Zeit</sys:String>
+    <sys:String x:Key="StringTourLogsDuration">Dauer</sys:String>
+    <sys:String x:Key="StringTourLogsDifficulty">Schwierigkeit</sys:String>
+    <sys:String x:Key="StringTourLogsDifficultyEasy">Leicht</sys:String>
+    <sys:String x:Key="StringTourLogsDifficultyMedium">Mittel</sys:String>
+    <sys:String x:Key="StringTourLogsDifficultyHard">Schwer</sys:String>
+    <sys:String x:Key="StringTourLogsRating">Bewertung</sys:String>
+    <sys:String x:Key="StringTourLogsComment">Kommentar</sys:String>
+    <sys:String x:Key="StringAddTourLog">Aufzeichnung hinzufügen</sys:String>
+    <sys:String x:Key="StringModifyTourLog">Aufzeichnung ändern</sys:String>
+    <sys:String x:Key="StringDeleteTourLog">Aufzeichnung löschen</sys:String>
+    <sys:String x:Key="StringErrorNotFilled">Beginn und Ziel müssen ausgefüllt werden.</sys:String>
+    <sys:String x:Key="StringErrorInvalidValuesResponse">Als Antwort kamen ungültige Werte. &#13;(Distanz = 0 oder Zeit = 0)</sys:String>
+</ResourceDictionary>

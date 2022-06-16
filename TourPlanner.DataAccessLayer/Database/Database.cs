@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Configuration;
 using TourPlanner.Models;
 using Npgsql;
-using TourPlanner.Models.Enums;
 
 namespace TourPlanner.DataAccessLayer.Database
 {
     public class Database : IDatabase
     {
 
-        private string _conString;
+        public string _conString { get; set; }
         private string _dbname = "tourplanner";
         private static IDatabase? _database;
 
         private Database()
         {
-            _conString = ConfigurationManager.AppSettings["connectionstring"] ?? "not found";
+            _conString = ConfigurationManager.AppSettings["ConnectionString"] ?? "not found";
 
             CreateDatabaseIfNotExists();
 
@@ -56,7 +55,7 @@ namespace TourPlanner.DataAccessLayer.Database
                 "tl_id SERIAL PRIMARY KEY," +
                 "tl_datetime TIMESTAMP NOT NULL," +
                 "tl_comment VARCHAR(255)," +
-                "tl_difficulty INT NOT NULL," +
+                "tl_difficulty VARCHAR(50) NOT NULL," +
                 "tl_totaltime INT NOT NULL," +
                 "tl_rating INT NOT NULL);";
 
@@ -129,7 +128,35 @@ namespace TourPlanner.DataAccessLayer.Database
                     comment = rdr.GetString(3);
                 else
                     comment = string.Empty;
-                var difficulty = (Difficulty)rdr.GetInt32(4);
+                var difficulty = rdr.GetString(4);
+                var totalTime = TimeSpan.FromSeconds(rdr.GetInt32(5));
+                var rating = rdr.GetInt32(6);
+
+                tourLogs.Add(new TourLog(id, datetime, comment, difficulty, totalTime, rating));
+            }
+
+            return tourLogs;
+        }
+
+        public List<TourLog> GetAllTourLogs()
+        {
+            const string sql = "SELECT * FROM tourlogs";
+
+            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            using var rdr = cmd.ExecuteReader();
+
+            List<TourLog> tourLogs = new List<TourLog>();
+
+            while (rdr.Read())
+            {
+                var id = rdr.GetInt32(1);
+                var datetime = rdr.GetDateTime(2);
+                string comment;
+                if (!rdr.IsDBNull(3))
+                    comment = rdr.GetString(3);
+                else
+                    comment = string.Empty;
+                var difficulty = rdr.GetString(4);
                 var totalTime = TimeSpan.FromSeconds(rdr.GetInt32(5));
                 var rating = rdr.GetInt32(6);
 
@@ -148,8 +175,8 @@ namespace TourPlanner.DataAccessLayer.Database
 
             cmd.Parameters.AddWithValue("@t_name", newTour.Name);
             cmd.Parameters.AddWithValue("@t_description", NpgsqlTypes.NpgsqlDbType.Varchar, (object)newTour.Description ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@t_from", newTour.From);
-            cmd.Parameters.AddWithValue("@t_to", newTour.To);
+            cmd.Parameters.AddWithValue("@t_from", newTour.Start);
+            cmd.Parameters.AddWithValue("@t_to", newTour.Destination);
             cmd.Parameters.AddWithValue("@t_transporttype", newTour.TransportType);
             cmd.Parameters.AddWithValue("@t_distance", newTour.Distance);
             cmd.Parameters.AddWithValue("@t_time", newTour.Time.TotalSeconds);
@@ -167,7 +194,7 @@ namespace TourPlanner.DataAccessLayer.Database
             cmd.Parameters.AddWithValue("@t_id", tourId);
             cmd.Parameters.AddWithValue("@tl_datetime", newTourLog.Datetime);
             cmd.Parameters.AddWithValue("@tl_comment", NpgsqlTypes.NpgsqlDbType.Varchar, (object)newTourLog.Comment ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@tl_difficulty", (int)newTourLog.Difficulty);
+            cmd.Parameters.AddWithValue("@tl_difficulty", newTourLog.Difficulty);
             cmd.Parameters.AddWithValue("@tl_totaltime", newTourLog.TotalTime.TotalSeconds);
             cmd.Parameters.AddWithValue("@tl_rating", newTourLog.Rating);
             cmd.Prepare();
@@ -190,8 +217,8 @@ namespace TourPlanner.DataAccessLayer.Database
             cmd.Parameters.AddWithValue("@t_id", id);
             cmd.Parameters.AddWithValue("@t_name", newTour.Name);
             cmd.Parameters.AddWithValue("@t_description", newTour.Description);
-            cmd.Parameters.AddWithValue("@t_from", newTour.From);
-            cmd.Parameters.AddWithValue("@t_to", newTour.To);
+            cmd.Parameters.AddWithValue("@t_from", newTour.Start);
+            cmd.Parameters.AddWithValue("@t_to", newTour.Destination);
             cmd.Parameters.AddWithValue("@t_transporttype", newTour.TransportType);
             cmd.Parameters.AddWithValue("@t_distance", newTour.Distance);
             cmd.Parameters.AddWithValue("@t_time", newTour.Time.TotalSeconds);
@@ -213,7 +240,7 @@ namespace TourPlanner.DataAccessLayer.Database
             cmd.Parameters.AddWithValue("@tl_id", tourLog.Id);
             cmd.Parameters.AddWithValue("@tl_datetime", tourLog.Datetime);
             cmd.Parameters.AddWithValue("@tl_comment", NpgsqlTypes.NpgsqlDbType.Varchar, (object)tourLog.Comment ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("@tl_difficulty", (int)tourLog.Difficulty);
+            cmd.Parameters.AddWithValue("@tl_difficulty", tourLog.Difficulty);
             cmd.Parameters.AddWithValue("@tl_totaltime", tourLog.TotalTime.TotalSeconds);
             cmd.Parameters.AddWithValue("@tl_rating", tourLog.Rating);
             cmd.Prepare();
@@ -238,6 +265,43 @@ namespace TourPlanner.DataAccessLayer.Database
             cmd.Parameters.AddWithValue("@tl_id", deleteTourLog.Id);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+        }
+
+        public List<Tour> SearchTours(string itemName)
+        {
+            const string sql = "SELECT DISTINCT tours.* FROM tours LEFT JOIN tourlogs ON (tours.t_id = tourlogs.t_id) WHERE " +
+                "LOWER(tours.t_name) LIKE @itemname OR " +
+                "LOWER(tours.t_description) LIKE @itemname OR " +
+                "LOWER(tours.t_from) LIKE @itemname OR " +
+                "LOWER(tours.t_to) LIKE @itemname OR " +
+                "LOWER(tourlogs.tl_comment) LIKE @itemname";
+
+            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            cmd.Parameters.AddWithValue("@itemname", $"%{itemName}%");
+            cmd.Prepare();
+            using var rdr = cmd.ExecuteReader();
+
+            List<Tour> searchedTours = new List<Tour>();
+
+            while (rdr.Read())
+            {
+                var id = rdr.GetInt32(0);
+                var name = rdr.GetString(1);
+                string description;
+                if (!rdr.IsDBNull(2))
+                    description = rdr.GetString(2);
+                else
+                    description = string.Empty;
+                var from = rdr.GetString(3);
+                var to = rdr.GetString(4);
+                var transportType = rdr.GetString(5);
+                var distance = rdr.GetDouble(6);
+                var time = TimeSpan.FromSeconds(rdr.GetInt32(7));
+
+                searchedTours.Add(new Tour(id, name, description, from, to, transportType, distance, time));
+            }
+
+            return searchedTours;
         }
 
         public int GetCurrentIncrementValue()

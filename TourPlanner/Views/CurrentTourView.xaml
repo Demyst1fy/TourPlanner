@@ -18,86 +18,119 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Margin="5,5,5,5">
-            <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{Binding CurrentTour.Name}"/>
-            <StackPanel>
-                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold">Start - End</TextBlock>
-                <TextBlock FontSize="16">
-                    <TextBlock.Text>    
-                        <MultiBinding StringFormat="{}{0} - {1}">
-                            <Binding Path="CurrentTour.From"/>
-                            <Binding Path="CurrentTour.To" />
-                        </MultiBinding>
-                    </TextBlock.Text>
-                </TextBlock>
-            </StackPanel>
-            <StackPanel>
-                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold">Transport Type</TextBlock>
-                <TextBlock FontSize="16" Text="{Binding CurrentTour.TransportType}"/>
-            </StackPanel>
-            <StackPanel>
-                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold">Distance</TextBlock>
-                <TextBlock FontSize="16" Text="{Binding CurrentTour.Distance, StringFormat='{}{0} km'}"/>
-            </StackPanel>
-            <StackPanel>
-                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold">Time</TextBlock>
-                <TextBlock FontSize="16" Text="{Binding CurrentTour.Time}"/>
-            </StackPanel>
-            <StackPanel Visibility="{Binding CurrentTour.Description, Converter={StaticResource VisibilityConverter}}">
-                <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold">Tour Description</TextBlock>
-                <TextBlock FontSize="16" Text="{Binding CurrentTour.Description}"/>
-            </StackPanel>
-            <WrapPanel HorizontalAlignment="Left">
-                <Button Width="100" Margin="5,5,5,5" Command="{Binding ModifyTourCommand}">Modify Tour</Button>
-                <Button Width="100" Margin="5,5,5,5" Command="{Binding DeleteTourCommand}">Delete Tour</Button>
-            </WrapPanel>
-        </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="1" Margin="5,5,5,5">
-            <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold">Map</TextBlock>
-            <Image Source="{Binding MapImage}" Width="500" Height="400" HorizontalAlignment="Left"/>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="0" Margin="5,5,5,5">
-            <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold">Logs</TextBlock>
+        <TabControl Grid.Row="0" Grid.ColumnSpan="2" Margin="5">
+            <TabItem Header="Information">
+                <StackPanel Margin="5">
+                    <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{Binding CurrentTour.Name}"/>
+                    <StackPanel>
+                        <WrapPanel>
+                            <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourStart}"/>
+                            <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text=" - "/>
+                            <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourDestination}"/>
+                        </WrapPanel>
+                        <TextBlock FontSize="16">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} - {1}">
+                                    <Binding Path="CurrentTour.Start"/>
+                                    <Binding Path="CurrentTour.Destination" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourTransportType}"/>
+                        <TextBlock FontSize="16" Text="{Binding CurrentTour.TransportType}"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourDistance}"/>
+                        <TextBlock FontSize="16" Text="{Binding CurrentTour.Distance, StringFormat='{}{0} km'}"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourTime}"/>
+                        <TextBlock FontSize="16" Text="{Binding CurrentTour.Time}"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourPopularity}"/>
+                        <TextBlock FontSize="16" Text="{Binding Popularity, StringFormat='{}{0}%'}"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourChildFriendliness}"/>
+                        <TextBlock FontSize="16" Text="{Binding ChildFriendliness, StringFormat='{}{0}%'}"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding CurrentTour.Description, Converter={StaticResource VisibilityConverter}}">
+                        <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourDescription}"/>
+                        <TextBlock FontSize="16" Text="{Binding CurrentTour.Description}"/>
+                    </StackPanel>
+                    <WrapPanel HorizontalAlignment="Left">
+                        <Button Width="100" Margin="5,5,5,5" Command="{Binding ModifyTourCommand}">
+                            <TextBlock Text="{DynamicResource StringModifyTour}"/>
+                        </Button>
+                        <Button Width="100" Margin="5,5,5,5" Command="{Binding DeleteTourCommand}">
+                            <TextBlock Text="{DynamicResource StringDeleteTour}"/>
+                        </Button>
+                    </WrapPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="{DynamicResource StringTourMap}">
+                <StackPanel Margin="5">
+                    <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{DynamicResource StringTourMap}"/>
+                    <Image Source="{Binding MapImage}" Height="400" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
+            <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{DynamicResource StringTourLogs}"/>
             <ListView Margin="5,5,5,5"
                     ItemsSource="{Binding TourLogsList}"
                     SelectedItem="{Binding CurrentTourLog}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Date" Width="Auto" DisplayMemberBinding="{Binding Datetime}" />
-                        <GridViewColumn Header="Total Time" Width="Auto" DisplayMemberBinding="{Binding TotalTime}" />
-                        <GridViewColumn Header="Difficulty" Width="Auto" DisplayMemberBinding="{Binding Difficulty}" />
-                        <GridViewColumn Header="Rating" Width="Auto" DisplayMemberBinding="{Binding Rating}" />
+                        <GridViewColumn Header="{DynamicResource StringTourLogsDate}" Width="Auto" DisplayMemberBinding="{Binding Datetime}" />
+                        <GridViewColumn Header="{DynamicResource StringTourLogsDuration}" Width="Auto" DisplayMemberBinding="{Binding TotalTime}" />
+                        <GridViewColumn Header="{DynamicResource StringTourLogsDifficulty}" Width="Auto" DisplayMemberBinding="{Binding Difficulty}" />
+                        <GridViewColumn Header="{DynamicResource StringTourLogsRating}" Width="Auto" DisplayMemberBinding="{Binding Rating}" />
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Button Grid.Row="3" Grid.Column="1" Width="100" Margin="5,5,5,5" HorizontalAlignment="Left" Command="{Binding AddTourLogCommand}">Add Log</Button>
+            <Button Grid.Row="3" Grid.Column="1" Width="150" Margin="5" HorizontalAlignment="Left" Command="{Binding AddTourLogCommand}">
+                <TextBlock Text="{DynamicResource StringAddTourLog}"/>
+            </Button>
         </StackPanel>
-        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,5,5,5" Visibility="{Binding IsCurrentTourLogSelected}">
-            <TextBlock FontSize="18" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold">Current Log</TextBlock>
-            <StackPanel>
-                <TextBlock FontSize="14" FontStyle="Italic" FontWeight="SemiBold">Date/Time</TextBlock>
-                <TextBlock FontSize="14" Text="{Binding CurrentTourLog.Datetime}"/>
+        <Border Grid.Row="1" Grid.Column="1" Margin="5" Visibility="{Binding IsCurrentTourLogSelected}"
+                BorderBrush="DimGray" BorderThickness="1" CornerRadius="2">
+            <StackPanel Margin="5">
+                <TextBlock FontSize="18" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{DynamicResource StringTourLogsCurrent}"/>
+                <StackPanel>
+                    <TextBlock FontSize="14" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsDate}"/>
+                    <TextBlock FontSize="14" Text="{Binding CurrentTourLog.Datetime}"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock FontSize="14" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsDuration}"/>
+                    <TextBlock FontSize="14" Text="{Binding CurrentTourLog.TotalTime}"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock FontSize="14" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsDifficulty}"/>
+                    <TextBlock FontSize="14" Text="{Binding CurrentTourLog.Difficulty}"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock FontSize="14" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsRating}"/>
+                    <TextBlock FontSize="14" Text="{Binding CurrentTourLog.Rating}"/>
+                </StackPanel>
+                <StackPanel Visibility="{Binding CurrentTourLog.Comment, Converter={StaticResource VisibilityConverter}}">
+                    <TextBlock FontSize="14" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsComment}"/>
+                    <TextBlock FontSize="14" Text="{Binding CurrentTourLog.Comment}"/>
+                </StackPanel>
+                <WrapPanel HorizontalAlignment="Left">
+                    <Button Width="150" Margin="5" Command="{Binding ModifyTourLogCommand}">
+                        <TextBlock Text="{DynamicResource StringModifyTourLog}"/>
+                    </Button>
+                    <Button Width="150" Margin="5" Command="{Binding DeleteTourLogCommand}">
+                        <TextBlock Text="{DynamicResource StringDeleteTourLog}"/>
+                    </Button>
+                </WrapPanel>
             </StackPanel>
-            <StackPanel>
-                <TextBlock FontSize="14" FontStyle="Italic" FontWeight="SemiBold">Duration</TextBlock>
-                <TextBlock FontSize="14" Text="{Binding CurrentTourLog.TotalTime}"/>
-            </StackPanel>
-            <StackPanel>
-                <TextBlock FontSize="14" FontStyle="Italic" FontWeight="SemiBold">Difficulty</TextBlock>
-                <TextBlock FontSize="14" Text="{Binding CurrentTourLog.Difficulty}"/>
-            </StackPanel>
-            <StackPanel>
-                <TextBlock FontSize="14" FontStyle="Italic" FontWeight="SemiBold">Rating</TextBlock>
-                <TextBlock FontSize="14" Text="{Binding CurrentTourLog.Rating}"/>
-            </StackPanel>
-            <StackPanel Visibility="{Binding CurrentTourLog.Comment, Converter={StaticResource VisibilityConverter}}">
-                <TextBlock FontSize="14" FontStyle="Italic" FontWeight="SemiBold">Comment</TextBlock>
-                <TextBlock FontSize="14" Text="{Binding CurrentTourLog.Comment}"/>
-            </StackPanel>
-            <WrapPanel HorizontalAlignment="Left">
-                <Button Width="100" Margin="5,5,5,5" Command="{Binding ModifyTourLogCommand}">Modify Log</Button>
-                <Button Width="100" Margin="5,5,5,5" Command="{Binding DeleteTourLogCommand}">Delete Log</Button>
-            </WrapPanel>
-        </StackPanel>
+        </Border>
     </Grid>
 </UserControl>
