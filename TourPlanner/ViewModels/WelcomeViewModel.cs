@@ -1,5 +1,7 @@
 ﻿using System.Windows.Input;
+using TourPlanner.BusinessLayer;
 using TourPlanner.Utils;
+using TourPlanner.DictionaryHandler;
 
 namespace TourPlanner.ViewModels
 {
@@ -7,11 +9,11 @@ namespace TourPlanner.ViewModels
     {
         public ICommand AddTourCommand { get; private set; }
 
-        public WelcomeViewModel(MainViewModel mainViewModel)
+        public WelcomeViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
-            AddTourCommand = new RelayCommand(o =>
+            AddTourCommand = new RelayCommand(_ =>
             {
-                mainViewModel.SelectedViewModel = new AddTourViewModel(mainViewModel);
+                mainViewModel.SelectedViewModel = new AddTourViewModel(mainViewModel, tourHandler, tourDictionary);
             });
         }
     }

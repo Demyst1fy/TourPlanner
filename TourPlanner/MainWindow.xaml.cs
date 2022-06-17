@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using TourPlanner.BusinessLayer;
+using TourPlanner.DictionaryHandler;
 using TourPlanner.ViewModels;
 
 namespace TourPlanner
@@ -12,6 +13,7 @@ namespace TourPlanner
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel(TourHandler.GetHandler(), new TourDictionary());
         }
     }
 }

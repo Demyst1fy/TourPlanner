@@ -19,7 +19,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0" Grid.ColumnSpan="2" Margin="5">
-            <TabItem Header="Information">
+            <TabItem Header="{DynamicResource StringTourInformation}">
                 <StackPanel Margin="5">
                     <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{Binding CurrentTour.Name}"/>
                     <StackPanel>
@@ -98,7 +98,7 @@
                 <TextBlock Text="{DynamicResource StringAddTourLog}"/>
             </Button>
         </StackPanel>
-        <Border Grid.Row="1" Grid.Column="1" Margin="5" Visibility="{Binding IsCurrentTourLogSelected}"
+        <Border Grid.Row="1" Grid.Column="1" Margin="5" Visibility="{Binding CurrentTourLog, Converter={StaticResource VisibilityConverter}}"
                 BorderBrush="DimGray" BorderThickness="1" CornerRadius="2">
             <StackPanel Margin="5">
                 <TextBlock FontSize="18" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{DynamicResource StringTourLogsCurrent}"/>

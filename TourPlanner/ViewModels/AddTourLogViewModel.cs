@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Input;
 using TourPlanner.BusinessLayer;
 using TourPlanner.Models;
+using TourPlanner.DictionaryHandler;
 using TourPlanner.Utils;
 
 namespace TourPlanner.ViewModels
 {
     public class AddTourLogViewModel : BaseViewModel
     {
-        private ITourHandler tourHandler;
         private Tour currentTour;
 
         private string comment;
@@ -17,6 +16,7 @@ namespace TourPlanner.ViewModels
         private TimeSpan totalTime;
         private int rating;
         public ICommand AddCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
 
         public Tour CurrentTour
         {
@@ -83,36 +83,28 @@ namespace TourPlanner.ViewModels
             }
         }
 
-        public AddTourLogViewModel(MainViewModel mainViewModel)
+        public AddTourLogViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
-            Difficulty = (string)Application.Current.Resources["StringTourLogsDifficultyEasy"];
+            Difficulty = tourDictionary.GetResourceFromDictionary("StringTourLogsDifficultyEasy");
             Rating = 5;
 
             tourHandler = TourHandler.GetHandler();
             CurrentTour = mainViewModel.CurrentTour;
 
-            AddCommand = new RelayCommand(o => {
+            AddCommand = new RelayCommand(_ => {
 
-                ChangeDifficultyToPassBL();
+                Difficulty = tourDictionary.ChangeDifficultyToPassBL(Difficulty);
 
                 TourLog newTourLog = new TourLog(Comment, Difficulty, TotalTime, Rating);
 
                 tourHandler.AddNewTourLog(CurrentTour.Id, newTourLog);
 
-                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel);
+                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
             });
-        }
 
-        public void ChangeDifficultyToPassBL()
-        {
-            if (Difficulty == (string)Application.Current.Resources["StringTourLogsDifficultyEasy"])
-                Difficulty = "Easy";
-            else if (Difficulty == (string)Application.Current.Resources["StringTourLogsDifficultyMedium"])
-                Difficulty = "Medium";
-            else if (Difficulty == (string)Application.Current.Resources["StringTourLogsDifficultyHard"])
-                Difficulty = "Hard";
-            else
-                Difficulty = "Easy";
+            CancelCommand = new RelayCommand(_ => {
+                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
+            });
         }
     }
 }

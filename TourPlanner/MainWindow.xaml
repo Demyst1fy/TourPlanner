@@ -7,10 +7,6 @@
         mc:Ignorable="d"
         Title="{DynamicResource StringTitle}" MinHeight="900" MinWidth="1200">
 
-    <Window.DataContext>
-        <viewmodels:MainViewModel/>
-    </Window.DataContext>
-    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

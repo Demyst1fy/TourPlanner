@@ -17,7 +17,5 @@ namespace TourPlanner.BusinessLayer {
         void DeleteTourLog(TourLog deleteTourLog);
         IEnumerable<Tour> SearchForTour(string itemName);
         ImageSource GetImageFile(Tour tour);
-        double CalculatePopularity(Tour currentTour);
-        double CalculateChildFriendliness(Tour currentTour);
     }
 }

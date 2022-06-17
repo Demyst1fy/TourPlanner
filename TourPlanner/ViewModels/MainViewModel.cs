@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 using TourPlanner.BusinessLayer;
 using TourPlanner.Models;
 using TourPlanner.Utils;
+using TourPlanner.DictionaryHandler;
 
 namespace TourPlanner.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private ITourHandler tourHandler;
+        private ITourHandler _tourHandler;
+        private ITourDictionary _tourDictionary;
         private BaseViewModel selectedViewModel;
         private string searchName;
         private Tour currentTour;
@@ -57,63 +57,57 @@ namespace TourPlanner.ViewModels
                 {
                     currentTour = value;
                     RaisePropertyChangedEvent(nameof(CurrentTour));
-                    this.SelectedViewModel = new CurrentTourViewModel(this);
+                    SelectedViewModel = new CurrentTourViewModel(this, _tourHandler, _tourDictionary);
                 }
             }
         }
 
-        public MainViewModel()
+        public MainViewModel(ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
-            ResourceDictionary dictionary = new ResourceDictionary();
-            dictionary.Source = new Uri("./Languages/English.xaml", UriKind.Relative);
-            Application.Current.Resources.MergedDictionaries.Add(dictionary);
+            this._tourDictionary = tourDictionary;
+            _tourHandler = tourHandler;
 
-            tourHandler = TourHandler.GetHandler();
-            SelectedViewModel = new WelcomeViewModel(this);
+            SelectedViewModel = new WelcomeViewModel(this, _tourHandler, _tourDictionary);
+
             ToursList = new ObservableCollection<Tour>();
 
             foreach (Tour item in tourHandler.GetTours())
             {
-                item.TransportType = ChangeTransportTypeToSelectedLanguage(item.TransportType);
+                item.TransportType = _tourDictionary.ChangeTransportTypeToSelectedLanguage(item.TransportType);
 
                 ToursList.Add(item);
             }
 
-            SearchCommand = new RelayCommand(o =>
+            SearchCommand = new RelayCommand(_ =>
             {
                 if (string.IsNullOrEmpty(SearchName))
                     return;
 
-                IEnumerable<Tour> items = tourHandler.SearchForTour(SearchName);
-                RefreshTourList(items);
-                SelectedViewModel = new WelcomeViewModel(this);
+                RefreshTourList(tourHandler.SearchForTour(SearchName));
+                SelectedViewModel = new WelcomeViewModel(this, _tourHandler, _tourDictionary);
             });
 
-            ClearCommand = new RelayCommand(o =>
+            ClearCommand = new RelayCommand(_ =>
             {
                 SearchName = "";
                 RefreshTourList(tourHandler.GetTours());
-                SelectedViewModel = new WelcomeViewModel(this);
+                SelectedViewModel = new WelcomeViewModel(this, _tourHandler, _tourDictionary);
             });
 
-            AddTourCommand = new RelayCommand(o =>
+            AddTourCommand = new RelayCommand(_ =>
             {
-                SelectedViewModel = new AddTourViewModel(this);
+                SelectedViewModel = new AddTourViewModel(this, tourHandler, tourDictionary);
             });
 
-            SelectEnglishCommand = new RelayCommand(o =>
+            SelectEnglishCommand = new RelayCommand(_ =>
             {
-                ResourceDictionary dictionary = new ResourceDictionary();
-                dictionary.Source = new Uri("./Languages/English.xaml", UriKind.Relative);
-                Application.Current.Resources.MergedDictionaries.Add(dictionary);
+                _tourDictionary.AddDictionaryToApp("./Languages/English.xaml");
                 RefreshTourList(tourHandler.GetTours());
             });
 
-            SelectGermanCommand = new RelayCommand(o =>
+            SelectGermanCommand = new RelayCommand(_ =>
             {
-                ResourceDictionary dictionary = new ResourceDictionary();
-                dictionary.Source = new Uri("./Languages/Deutsch.xaml", UriKind.Relative);
-                Application.Current.Resources.MergedDictionaries.Add(dictionary);
+                _tourDictionary.AddDictionaryToApp("./Languages/Deutsch.xaml");
                 RefreshTourList(tourHandler.GetTours());
             });
         }
@@ -123,29 +117,20 @@ namespace TourPlanner.ViewModels
             ToursList.Clear();
             foreach (Tour item in items)
             {
-
-                item.TransportType = ChangeTransportTypeToSelectedLanguage(item.TransportType);
+                item.TransportType = _tourDictionary.ChangeTransportTypeToSelectedLanguage(item.TransportType);
 
                 if (SelectedViewModel is CurrentTourViewModel)
                 {
                     var currentTourViewModel = SelectedViewModel as CurrentTourViewModel;
-                    currentTourViewModel.RefreshTourLogList(tourHandler.GetTourLogs(CurrentTour));
+                    if(currentTourViewModel.CurrentTour.Id == item.Id)
+                    {
+                        currentTourViewModel.CurrentTour = item;
+                    }
+                    currentTourViewModel.RefreshTourLogList(_tourHandler.GetTourLogs(CurrentTour), _tourHandler, _tourDictionary);
                 }
 
                 ToursList.Add(item);
             }
-        }
-
-        private string ChangeTransportTypeToSelectedLanguage(string transportType)
-        {
-            if (transportType == "Car")
-                return (string)Application.Current.Resources["StringTourCar"];
-            else if (transportType == "Foot")
-                return (string)Application.Current.Resources["StringTourFoot"];
-            else if (transportType == "Bicycle")
-                return (string)Application.Current.Resources["StringTourBicycle"];
-            else
-                return (string)Application.Current.Resources["StringTourCar"];
         }
     }
 }

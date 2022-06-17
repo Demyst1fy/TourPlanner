@@ -9,7 +9,7 @@ namespace TourPlanner.Utils
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value == null || (string)value == string.Empty ? Visibility.Collapsed : Visibility.Visible;
+            return value == null || value.ToString() == string.Empty ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

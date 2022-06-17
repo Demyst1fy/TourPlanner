@@ -10,6 +10,7 @@
     <sys:String x:Key="StringSearch">Suchen</sys:String>
     <sys:String x:Key="StringClear">Zurücksetzen</sys:String>
     <sys:String x:Key="StringModify">Ändern</sys:String>
+    <sys:String x:Key="StringCancel">Abbrechen</sys:String>
     <sys:String x:Key="StringAddTour">Tour hinzufügen</sys:String>
     <sys:String x:Key="StringModifyTour">Tour ändern</sys:String>
     <sys:String x:Key="StringDeleteTour">Tour löschen</sys:String>
@@ -43,5 +44,5 @@
     <sys:String x:Key="StringModifyTourLog">Aufzeichnung ändern</sys:String>
     <sys:String x:Key="StringDeleteTourLog">Aufzeichnung löschen</sys:String>
     <sys:String x:Key="StringErrorNotFilled">Beginn und Ziel müssen ausgefüllt werden.</sys:String>
-    <sys:String x:Key="StringErrorInvalidValuesResponse">Als Antwort kamen ungültige Werte. &#13;(Distanz = 0 oder Zeit = 0)</sys:String>
+    <sys:String x:Key="StringErrorInvalidValuesResponse">Als Antwort kamen ungültige Werte. (Distanz = 0 oder Zeit = 0)</sys:String>
 </ResourceDictionary>

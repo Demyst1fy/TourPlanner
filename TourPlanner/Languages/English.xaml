@@ -10,6 +10,7 @@
     <sys:String x:Key="StringSearch">Search</sys:String>
     <sys:String x:Key="StringClear">Clear</sys:String>
     <sys:String x:Key="StringModify">Modify</sys:String>
+    <sys:String x:Key="StringCancel">Cancel</sys:String>
     <sys:String x:Key="StringAddTour">Add Tour</sys:String>
     <sys:String x:Key="StringModifyTour">Modify Tour</sys:String>
     <sys:String x:Key="StringDeleteTour">Delete Tour</sys:String>
@@ -43,5 +44,5 @@
     <sys:String x:Key="StringModifyTourLog">Modify Log</sys:String>
     <sys:String x:Key="StringDeleteTourLog">Delete Log</sys:String>
     <sys:String x:Key="StringErrorNotFilled">Start and Destination must be filled.</sys:String>
-    <sys:String x:Key="StringErrorInvalidValuesResponse">Invalid Values came as response. &#13;(Distance = 0 or Time = 0)</sys:String>
+    <sys:String x:Key="StringErrorInvalidValuesResponse">Invalid Values came as response. (Distance = 0 or Time = 0)</sys:String>
 </ResourceDictionary>

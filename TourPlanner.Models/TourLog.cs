@@ -40,5 +40,16 @@ namespace TourPlanner.Models
             TotalTime = totalTime;
             Rating = rating;
         }
+
+        public TourLog(TourLog log)
+        {
+            TourId = log.TourId;
+            Id = log.Id;
+            Datetime = log.Datetime;
+            Comment = log.Comment;
+            Difficulty = log.Difficulty;
+            TotalTime = log.TotalTime;
+            Rating = log.Rating;
+        }
     }
 }

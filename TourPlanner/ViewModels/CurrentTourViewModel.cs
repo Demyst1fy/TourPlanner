@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using TourPlanner.BusinessLayer;
 using TourPlanner.Models;
 using TourPlanner.Utils;
+using TourPlanner.DictionaryHandler;
 
 namespace TourPlanner.ViewModels
 {
     public class CurrentTourViewModel : BaseViewModel
     {
-        private ITourHandler tourHandler;
         private Tour currentTour;
         private TourLog currentTourLog;
         private ImageSource mapImage;
@@ -25,20 +23,6 @@ namespace TourPlanner.ViewModels
         public ICommand ModifyTourLogCommand { get; set; }
 
         public ICommand DeleteTourLogCommand { get; set; }
-
-        private Visibility isCurrentTourLogSelected;
-        public Visibility IsCurrentTourLogSelected
-        {
-            get
-            {
-                return isCurrentTourLogSelected;
-            }
-            set
-            {
-                isCurrentTourLogSelected = value;
-                RaisePropertyChangedEvent(nameof(IsCurrentTourLogSelected));
-            }
-        }
 
         private double popularity;
         public double Popularity
@@ -89,7 +73,6 @@ namespace TourPlanner.ViewModels
             {
                 currentTourLog = value;
                 RaisePropertyChangedEvent(nameof(CurrentTourLog));
-                this.IsCurrentTourLogSelected = Visibility.Visible;
             }
         }
 
@@ -104,74 +87,68 @@ namespace TourPlanner.ViewModels
         }
 
 
-        public CurrentTourViewModel(MainViewModel mainViewModel)
+        public CurrentTourViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
-            tourHandler = TourHandler.GetHandler();
             CurrentTour = mainViewModel.CurrentTour;
-
-            IsCurrentTourLogSelected = Visibility.Hidden;
 
             MapImage = tourHandler.GetImageFile(CurrentTour);
 
             TourLogsList = new ObservableCollection<TourLog>();
             foreach (TourLog item in tourHandler.GetTourLogs(CurrentTour))
             {
-                item.Difficulty = ChangeDifficultyToSelectedLanguage(item.Difficulty);
-
+                item.Difficulty = tourDictionary.ChangeDifficultyToSelectedLanguage(item.Difficulty);
                 TourLogsList.Add(item);
             }
-            Popularity = tourHandler.CalculatePopularity(CurrentTour);
-            ChildFriendliness = tourHandler.CalculateChildFriendliness(CurrentTour);
 
-            ModifyTourCommand = new RelayCommand(o => {
-                mainViewModel.SelectedViewModel = new ModifyTourViewModel(mainViewModel);
+            Popularity = ComputedTourAttribute.CalculatePopularity(tourHandler, CurrentTour);
+            ChildFriendliness = ComputedTourAttribute.CalculateChildFriendliness(tourHandler, tourDictionary, CurrentTour);
+
+            ModifyTourCommand = new RelayCommand(_ => {
+                mainViewModel.SelectedViewModel = new ModifyTourViewModel(mainViewModel, tourHandler, tourDictionary);
             });
 
-            DeleteTourCommand = new RelayCommand(o => {
+            DeleteTourCommand = new RelayCommand(_ => {
                 tourHandler.DeleteTour(CurrentTour);
 
                 mainViewModel.RefreshTourList(tourHandler.GetTours());
-                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel);
+                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
             });
 
-            AddTourLogCommand = new RelayCommand(o => {
-                mainViewModel.SelectedViewModel = new AddTourLogViewModel(mainViewModel);
+            AddTourLogCommand = new RelayCommand(_ => {
+                mainViewModel.SelectedViewModel = new AddTourLogViewModel(mainViewModel, tourHandler, tourDictionary);
             });
 
-            ModifyTourLogCommand = new RelayCommand(o => {
-                mainViewModel.SelectedViewModel = new ModifyTourLogViewModel(mainViewModel, this);
+            ModifyTourLogCommand = new RelayCommand(_ => {
+                mainViewModel.SelectedViewModel = new ModifyTourLogViewModel(mainViewModel, this, tourHandler, tourDictionary);
             });
 
-            DeleteTourLogCommand = new RelayCommand(o => {
+            DeleteTourLogCommand = new RelayCommand(_ => {
                 tourHandler.DeleteTourLog(CurrentTourLog);
-                RefreshTourLogList(tourHandler.GetTourLogs(CurrentTour));
-                IsCurrentTourLogSelected = Visibility.Hidden;
+                RefreshTourLogList(tourHandler.GetTourLogs(CurrentTour), tourHandler, tourDictionary);
             });
         }
 
-        public void RefreshTourLogList(IEnumerable<TourLog> tourLogList)
+        public void RefreshTourLogList(IEnumerable<TourLog> tourLogList, ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
+            TourLog tmpTourLog = null;
+            if (CurrentTourLog != null)
+            {
+                tmpTourLog = new TourLog(CurrentTourLog);
+            }
+
             TourLogsList.Clear();
             foreach (TourLog item in tourLogList)
             {
-                item.Difficulty = ChangeDifficultyToSelectedLanguage(item.Difficulty);
+                item.Difficulty = tourDictionary.ChangeDifficultyToSelectedLanguage(item.Difficulty);
+
+                if(tmpTourLog != null)
+                    if (tmpTourLog.Id == item.Id)
+                        CurrentTourLog = item;
 
                 TourLogsList.Add(item);
             }
-            Popularity = tourHandler.CalculatePopularity(CurrentTour);
-            ChildFriendliness = tourHandler.CalculateChildFriendliness(CurrentTour);
-        }
-
-        private string ChangeDifficultyToSelectedLanguage(string difficulty)
-        {
-            if (difficulty == "Easy")
-                return (string)Application.Current.Resources["StringTourLogsDifficultyEasy"];
-            else if (difficulty == "Medium")
-                return (string)Application.Current.Resources["StringTourLogsDifficultyMedium"];
-            else if (difficulty == "Hard")
-                return (string)Application.Current.Resources["StringTourLogsDifficultyHard"];
-            else
-                return (string)Application.Current.Resources["StringTourLogsDifficultyEasy"];
+            Popularity = ComputedTourAttribute.CalculatePopularity(tourHandler, CurrentTour);
+            ChildFriendliness = ComputedTourAttribute.CalculateChildFriendliness(tourHandler, tourDictionary, CurrentTour);
         }
     }
 }

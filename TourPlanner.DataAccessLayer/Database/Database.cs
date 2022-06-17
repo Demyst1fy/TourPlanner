@@ -26,18 +26,27 @@ namespace TourPlanner.DataAccessLayer.Database
 
         private void CreateDatabaseIfNotExists()
         {
-            using var sqlCheck = new NpgsqlCommand($"SELECT 1 FROM pg_database WHERE datname='{_dbname}'", ConOpen());
+            string sql = $"SELECT 1 FROM pg_database WHERE datname='{_dbname}'";
 
-            if (sqlCheck.ExecuteScalar() == null)
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
+
+            if (cmd.ExecuteScalar() == null)
             {
-                using var cmd = new NpgsqlCommand($"CREATE DATABASE {_dbname}", ConOpen());
+                con.Close();
+                con = ConOpen();
+
+                string sql2 = $"CREATE DATABASE {_dbname}";
+
+                cmd = new NpgsqlCommand(sql2, con);
                 cmd.ExecuteNonQuery();
             }
+            con.Close();
         }
 
         private void CreateTablesIfNotExist()
         {
-            string sql = "CREATE TABLE IF NOT EXISTS tours(" +
+            const string sql = "CREATE TABLE IF NOT EXISTS tours(" +
                 "t_id SERIAL PRIMARY KEY," +
                 "t_name VARCHAR(50) UNIQUE NOT NULL," +
                 "t_description VARCHAR(255)," +
@@ -47,10 +56,12 @@ namespace TourPlanner.DataAccessLayer.Database
                 "t_distance FLOAT8 NOT NULL," +
                 "t_time INT NOT NULL)";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
             cmd.ExecuteNonQuery();
+            con.Close();
 
-            string sql2 = "CREATE TABLE IF NOT EXISTS tourlogs(" +
+            const string sql2 = "CREATE TABLE IF NOT EXISTS tourlogs(" +
                 "t_id INT NOT NULL CONSTRAINT t_id REFERENCES tours ON UPDATE CASCADE ON DELETE CASCADE," +
                 "tl_id SERIAL PRIMARY KEY," +
                 "tl_datetime TIMESTAMP NOT NULL," +
@@ -59,8 +70,11 @@ namespace TourPlanner.DataAccessLayer.Database
                 "tl_totaltime INT NOT NULL," +
                 "tl_rating INT NOT NULL);";
 
-            using var cmd2 = new NpgsqlCommand(sql2, ConOpen());
+            con = ConOpen();
+
+            using var cmd2 = new NpgsqlCommand(sql2, con);
             cmd2.ExecuteNonQuery();
+            con.Close();
         }
 
         private NpgsqlConnection ConOpen()
@@ -83,8 +97,9 @@ namespace TourPlanner.DataAccessLayer.Database
         {
             const string sql = "SELECT * FROM tours";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
-            using var rdr = cmd.ExecuteReader();
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
+            var rdr = cmd.ExecuteReader();
 
             List<Tour> tours = new List<Tour>();
 
@@ -105,6 +120,8 @@ namespace TourPlanner.DataAccessLayer.Database
 
                 tours.Add(new Tour(id, name, description, from, to, transportType, distance, time));
             }
+            rdr.Close();
+            con.Close();
 
             return tours;
         }
@@ -113,9 +130,11 @@ namespace TourPlanner.DataAccessLayer.Database
         {
             const string sql = "SELECT * FROM tourlogs WHERE t_id = @t_id";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
+
             cmd.Parameters.AddWithValue("@t_id", tour.Id);
-            using var rdr = cmd.ExecuteReader();
+            var rdr = cmd.ExecuteReader();
 
             List<TourLog> tourLogs = new List<TourLog>();
 
@@ -134,6 +153,8 @@ namespace TourPlanner.DataAccessLayer.Database
 
                 tourLogs.Add(new TourLog(id, datetime, comment, difficulty, totalTime, rating));
             }
+            rdr.Close();
+            con.Close();
 
             return tourLogs;
         }
@@ -142,8 +163,9 @@ namespace TourPlanner.DataAccessLayer.Database
         {
             const string sql = "SELECT * FROM tourlogs";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
-            using var rdr = cmd.ExecuteReader();
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
+            var rdr = cmd.ExecuteReader();
 
             List<TourLog> tourLogs = new List<TourLog>();
 
@@ -162,6 +184,8 @@ namespace TourPlanner.DataAccessLayer.Database
 
                 tourLogs.Add(new TourLog(id, datetime, comment, difficulty, totalTime, rating));
             }
+            rdr.Close();
+            con.Close();
 
             return tourLogs;
         }
@@ -171,7 +195,8 @@ namespace TourPlanner.DataAccessLayer.Database
             const string sql = "INSERT INTO tours (t_name, t_description, t_from, t_to, t_transporttype, t_distance, t_time)" +
                                "VALUES (@t_name, @t_description, @t_from, @t_to, @t_transporttype, @t_distance, @t_time)";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
 
             cmd.Parameters.AddWithValue("@t_name", newTour.Name);
             cmd.Parameters.AddWithValue("@t_description", NpgsqlTypes.NpgsqlDbType.Varchar, (object)newTour.Description ?? DBNull.Value);
@@ -182,6 +207,7 @@ namespace TourPlanner.DataAccessLayer.Database
             cmd.Parameters.AddWithValue("@t_time", newTour.Time.TotalSeconds);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            con.Close();
         }
 
         public void AddNewTourLog(int tourId, TourLog newTourLog)
@@ -189,7 +215,8 @@ namespace TourPlanner.DataAccessLayer.Database
             const string sql = "INSERT INTO tourlogs (t_id, tl_datetime, tl_comment, tl_difficulty, tl_totaltime, tl_rating)" +
                                "VALUES (@t_id, @tl_datetime, @tl_comment, @tl_difficulty, @tl_totaltime, @tl_rating)";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
 
             cmd.Parameters.AddWithValue("@t_id", tourId);
             cmd.Parameters.AddWithValue("@tl_datetime", newTourLog.Datetime);
@@ -199,6 +226,7 @@ namespace TourPlanner.DataAccessLayer.Database
             cmd.Parameters.AddWithValue("@tl_rating", newTourLog.Rating);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            con.Close();
         }
 
         public void ModifyTour(int id, Tour newTour)
@@ -213,7 +241,9 @@ namespace TourPlanner.DataAccessLayer.Database
                 "t_time = @t_time " +
                 "WHERE t_id = @t_id";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
+
             cmd.Parameters.AddWithValue("@t_id", id);
             cmd.Parameters.AddWithValue("@t_name", newTour.Name);
             cmd.Parameters.AddWithValue("@t_description", newTour.Description);
@@ -224,6 +254,7 @@ namespace TourPlanner.DataAccessLayer.Database
             cmd.Parameters.AddWithValue("@t_time", newTour.Time.TotalSeconds);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            con.Close();
         }
 
         public void ModifyTourLog(TourLog tourLog)
@@ -236,7 +267,9 @@ namespace TourPlanner.DataAccessLayer.Database
                 "tl_rating = @tl_rating " +
                 "WHERE tl_id = @tl_id";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
+
             cmd.Parameters.AddWithValue("@tl_id", tourLog.Id);
             cmd.Parameters.AddWithValue("@tl_datetime", tourLog.Datetime);
             cmd.Parameters.AddWithValue("@tl_comment", NpgsqlTypes.NpgsqlDbType.Varchar, (object)tourLog.Comment ?? DBNull.Value);
@@ -245,26 +278,33 @@ namespace TourPlanner.DataAccessLayer.Database
             cmd.Parameters.AddWithValue("@tl_rating", tourLog.Rating);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            con.Close();
         }
 
         public void DeleteTour(Tour newTour)
         {
             const string sql = "DELETE FROM tours WHERE t_id = @t_id";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
+
             cmd.Parameters.AddWithValue("@t_id", newTour.Id);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            con.Close();
         }
 
         public void DeleteTourLog(TourLog deleteTourLog)
         {
             const string sql = "DELETE FROM tourlogs WHERE tl_id = @tl_id";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
+
             cmd.Parameters.AddWithValue("@tl_id", deleteTourLog.Id);
             cmd.Prepare();
             cmd.ExecuteNonQuery();
+            con.Close();
         }
 
         public List<Tour> SearchTours(string itemName)
@@ -276,10 +316,13 @@ namespace TourPlanner.DataAccessLayer.Database
                 "LOWER(tours.t_to) LIKE @itemname OR " +
                 "LOWER(tourlogs.tl_comment) LIKE @itemname";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
+
             cmd.Parameters.AddWithValue("@itemname", $"%{itemName}%");
             cmd.Prepare();
-            using var rdr = cmd.ExecuteReader();
+
+            var rdr = cmd.ExecuteReader();
 
             List<Tour> searchedTours = new List<Tour>();
 
@@ -300,6 +343,8 @@ namespace TourPlanner.DataAccessLayer.Database
 
                 searchedTours.Add(new Tour(id, name, description, from, to, transportType, distance, time));
             }
+            rdr.Close();
+            con.Close();
 
             return searchedTours;
         }
@@ -311,11 +356,16 @@ namespace TourPlanner.DataAccessLayer.Database
 
             string sql = $"SELECT {LAST_VALUE} FROM {TOURS_T_ID_SEQ}";
 
-            using var cmd = new NpgsqlCommand(sql, ConOpen());
+            var con = ConOpen();
+            var cmd = new NpgsqlCommand(sql, con);
             using var rdr = cmd.ExecuteReader();
 
             rdr.Read();
-            return rdr.GetInt32(0);
+            int currentIncrementValue = rdr.GetInt32(0);
+
+            rdr.Close();
+            con.Close();
+            return currentIncrementValue;
         }
     }
 }

@@ -43,9 +43,14 @@
                     <ComboBoxItem Content="{DynamicResource StringTourBicycle}"/>
                 </ComboBox>
             </StackPanel>
-            <Button FontSize="16" Width="100" HorizontalAlignment="Right" Margin="5,5,5,5" Command="{Binding ModifyCommand}">
-                <TextBlock Text="{DynamicResource StringModify}"/>
-            </Button>
+            <WrapPanel HorizontalAlignment="Right">
+                <Button FontSize="16" Width="100" Margin="0,10,10,0" Command="{Binding CancelCommand}">
+                    <TextBlock Text="{DynamicResource StringCancel}"/>
+                </Button>
+                <Button FontSize="16" Width="100" Margin="0,10,0,0" Command="{Binding ModifyCommand}">
+                    <TextBlock Text="{DynamicResource StringModify}"/>
+                </Button>
+            </WrapPanel>
             <TextBlock Foreground="Red" Margin="5" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding IsError}" FontSize="16" TextDecorations="Underline" Text="{Binding ErrorText}"/>
         </StackPanel>
     </Grid>

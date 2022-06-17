@@ -6,12 +6,12 @@ using TourPlanner.BusinessLayer;
 using TourPlanner.BusinessLayer.JsonClasses;
 using TourPlanner.Models;
 using TourPlanner.Utils;
+using TourPlanner.DictionaryHandler;
 
 namespace TourPlanner.ViewModels
 {
     public class AddTourViewModel : BaseViewModel
     {
-        private ITourHandler tourHandler;
         private Visibility isError;
         private string errorText;
 
@@ -21,6 +21,7 @@ namespace TourPlanner.ViewModels
         private string description;
         private string transportType;
         public ICommand AddCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
 
         public string Name
         {
@@ -113,21 +114,22 @@ namespace TourPlanner.ViewModels
             }
         }
 
-        public AddTourViewModel(MainViewModel mainViewModel)
+        public AddTourViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
-            tourHandler = TourHandler.GetHandler();
             IsError = Visibility.Hidden;
-            TransportType = (string)Application.Current.Resources["StringTourCar"];
 
-            AddCommand = new RelayCommand(async o => {
-                if(string.IsNullOrEmpty(Start) || string.IsNullOrEmpty(Destination))
+            TransportType = tourDictionary.GetResourceFromDictionary("StringTourCar");
+
+            AddCommand = new RelayCommand(async _ =>
+            {
+                if (string.IsNullOrEmpty(Start) || string.IsNullOrEmpty(Destination))
                 {
-                    ErrorText = (string)Application.Current.Resources["StringErrorNotFilled"];
+                    ErrorText = tourDictionary.GetResourceFromDictionary("StringErrorNotFilled");
                     IsError = Visibility.Visible;
                     return;
                 }
 
-                ChangeTransportTypeToPassBL();
+                TransportType = tourDictionary.ChangeTransportTypeToPassBL(TransportType);
 
                 TourAPIData tourAPIdata = await APIRequest.RequestDirection(Start, Destination, TransportType);
 
@@ -145,7 +147,7 @@ namespace TourPlanner.ViewModels
 
                 if (distance == 0.0 || time == TimeSpan.Parse("00:00:00"))
                 {
-                    ErrorText = (string)Application.Current.Resources["StringErrorInvalidValuesResponse"];
+                    ErrorText = tourDictionary.GetResourceFromDictionary("StringErrorInvalidValuesResponse");
                     IsError = Visibility.Visible;
                     return;
                 }
@@ -155,19 +157,12 @@ namespace TourPlanner.ViewModels
                 tourHandler.AddNewTour(newTour);
 
                 mainViewModel.RefreshTourList(tourHandler.GetTours());
-                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel);
+                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
             });
-        }
-        public void ChangeTransportTypeToPassBL()
-        {
-            if (TransportType == (string)Application.Current.Resources["StringTourCar"])
-                TransportType = "Car";
-            else if (TransportType == (string)Application.Current.Resources["StringTourFoot"])
-                TransportType = "Foot";
-            else if (TransportType == (string)Application.Current.Resources["StringTourBicycle"])
-                TransportType = "Bicycle";
-            else
-                TransportType = "Car";
+
+            CancelCommand = new RelayCommand(_ => {
+                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+            });
         }
     }
 }
