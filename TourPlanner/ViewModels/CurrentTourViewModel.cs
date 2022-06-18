@@ -8,6 +8,8 @@ using TourPlanner.Models;
 using TourPlanner.Utils;
 using TourPlanner.BusinessLayer.DictionaryHandler;
 using TourPlanner.BusinessLayer.TourAttributes;
+using TourPlanner.BusinessLayer.PDFGenerator;
+using TourPlanner.BusinessLayer.Exceptions;
 
 namespace TourPlanner.ViewModels
 {
@@ -93,6 +95,7 @@ namespace TourPlanner.ViewModels
 
         public ICommand ModifyTourCommand { get; set; }
         public ICommand DeleteTourCommand { get; set; }
+        public ICommand GenerateSingleTourReportCommand { get; set; }
         public ICommand AddTourLogCommand { get; set; }
         public ICommand ModifyTourLogCommand { get; set; }
         public ICommand DeleteTourLogCommand { get; set; }
@@ -139,6 +142,27 @@ namespace TourPlanner.ViewModels
                         break;
                     case MessageBoxResult.Cancel:
                         break;
+                }
+            });
+
+            GenerateSingleTourReportCommand = new RelayCommand(_ => {
+                try
+                {
+                    PDFGenerator.GenerateSingleReport(tourDictionary, CurrentTour, TourLogsList, Popularity, ChildFriendliness);
+
+                    MessageBox.Show(
+                        tourDictionary.GetResourceFromDictionary("StringPDFGenerationSuccess"),
+                        tourDictionary.GetResourceFromDictionary("StringTitle"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+                catch(PDFGenerationException ex)
+                {
+                    MessageBox.Show(
+                        tourDictionary.GetResourceFromDictionary("StringErrorPDFGenerationError"),
+                        tourDictionary.GetResourceFromDictionary("StringTitle"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                 }
             });
 

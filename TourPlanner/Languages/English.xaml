@@ -15,12 +15,16 @@
     <sys:String x:Key="StringAddTour">Add Tour</sys:String>
     <sys:String x:Key="StringModifyTour">Modify Tour</sys:String>
     <sys:String x:Key="StringDeleteTour">Delete Tour</sys:String>
+    <sys:String x:Key="StringGenerateTourSummarizeReport">Generate Tour-Summarize Report</sys:String>
+    <sys:String x:Key="StringTourSummarizeAverage">Summarized Tours Report (Average Values)</sys:String>
+    <sys:String x:Key="StringGenerateSingleTourReport">Generate Tour Report</sys:String>
+    <sys:String x:Key="StringPDFGenerationSuccess">PDF generated!</sys:String>
     <sys:String x:Key="StringTourName">Name</sys:String>
     <sys:String x:Key="StringTourStart">Start</sys:String>
     <sys:String x:Key="StringTourDestination">Destination</sys:String>
     <sys:String x:Key="StringTourDistance">Distance</sys:String>
     <sys:String x:Key="StringTourTime">Time</sys:String>
-    <sys:String x:Key="StringTourDescription">Tour Description</sys:String>
+    <sys:String x:Key="StringTourDescription">Description</sys:String>
     <sys:String x:Key="StringTourTransportType">Transport Type</sys:String>
     <sys:String x:Key="StringTourCar">Car</sys:String>
     <sys:String x:Key="StringTourFoot">Foot</sys:String>
@@ -56,4 +60,6 @@
     <sys:String x:Key="StringErrorNotFilled">Start and Destination must be filled.</sys:String>
     <sys:String x:Key="StringErrorTourNameAlreadyExists">Name of tour already exists.</sys:String>
     <sys:String x:Key="StringErrorInvalidValuesResponse">Invalid Values came as response.</sys:String>
+    <sys:String x:Key="StringErrorPDFGenerationError">An error occured during PDF generation.</sys:String>
+    <sys:String x:Key="StringErrorNoTours">There are no tours listed yet.</sys:String>
 </ResourceDictionary>

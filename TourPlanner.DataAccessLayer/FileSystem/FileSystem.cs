@@ -48,7 +48,7 @@ namespace TourPlanner.DataAccessLayer.FileSystem
                     $"start={tour.Start}" +
                     $"&end={tour.Destination}" +
                     $"&key={apiKey}" +
-                    $"&size=640,480@2x"
+                    $"&size=640,480"
                     ), file);
             } catch (Exception ex)
             {

@@ -5,6 +5,9 @@ using TourPlanner.Models;
 using TourPlanner.Utils;
 using TourPlanner.BusinessLayer.DictionaryHandler;
 using TourPlanner.BusinessLayer.TourHandler;
+using TourPlanner.BusinessLayer.PDFGenerator;
+using System.Windows;
+using TourPlanner.BusinessLayer.Exceptions;
 
 namespace TourPlanner.ViewModels
 {
@@ -70,6 +73,7 @@ namespace TourPlanner.ViewModels
         public ICommand SearchCommand { get; private set; }
         public ICommand ClearCommand { get; private set; }
         public ICommand AddTourCommand { get; private set; }
+        public ICommand GenerateTourSummarizeReportCommand { get; private set; }
         public ICommand SelectEnglishCommand { get; private set; }
         public ICommand SelectGermanCommand { get; private set; }
 
@@ -105,7 +109,37 @@ namespace TourPlanner.ViewModels
 
             AddTourCommand = new RelayCommand(_ =>
             {
-                SelectedViewModel = new AddTourViewModel(this, _tourHandler, tourDictionary);
+                SelectedViewModel = new AddTourViewModel(this, _tourHandler, _tourDictionary);
+            });
+
+            GenerateTourSummarizeReportCommand = new RelayCommand(_ =>
+            {
+                try
+                {
+                    PDFGenerator.GenerateSummarizedReport(_tourHandler, _tourDictionary, ToursList);
+
+                    MessageBox.Show(
+                        tourDictionary.GetResourceFromDictionary("StringPDFGenerationSuccess"),
+                        tourDictionary.GetResourceFromDictionary("StringTitle"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+                }
+                catch (NoToursException ex)
+                {
+                    MessageBox.Show(
+                        tourDictionary.GetResourceFromDictionary("StringErrorNoTours"),
+                        tourDictionary.GetResourceFromDictionary("StringTitle"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+                catch (PDFGenerationException ex)
+                {
+                    MessageBox.Show(
+                        tourDictionary.GetResourceFromDictionary("StringErrorPDFGenerationError"),
+                        tourDictionary.GetResourceFromDictionary("StringTitle"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
             });
 
             SelectEnglishCommand = new RelayCommand(_ =>
