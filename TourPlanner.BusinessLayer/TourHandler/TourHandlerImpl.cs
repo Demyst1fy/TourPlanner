@@ -5,6 +5,7 @@ using TourPlanner.BusinessLayer.Exceptions;
 using TourPlanner.DataAccessLayer.Database;
 using TourPlanner.DataAccessLayer.Exceptions;
 using TourPlanner.DataAccessLayer.FileSystem;
+using TourPlanner.Logger;
 using TourPlanner.Models;
 
 namespace TourPlanner.BusinessLayer.TourHandler
@@ -13,10 +14,12 @@ namespace TourPlanner.BusinessLayer.TourHandler
 
         private IDatabase _database;
         private IFileSystem _fileSystem;
+        private ILoggerWrapper _logger;
 
         public TourHandlerImpl() {
             _database = Database.GetDatabase();
             _fileSystem = FileSystem.GetFileSystem();
+            _logger = Log4NetWrapper.CreateLogger("./log4net.config");
         }
 
         public TourHandlerImpl(IDatabase database, IFileSystem fileSystem)
@@ -33,14 +36,15 @@ namespace TourPlanner.BusinessLayer.TourHandler
                 int currentIncrementValue = _database.GetCurrentIncrementValue();
                 _fileSystem.SaveImageFile(newTour, currentIncrementValue);
 
-                // log
+                _logger.Info($"Tour added: [{newTour.Name}] ID: [{newTour.Id}]");
             } catch (NoMapReceivedException ex)
             {
-                // log
+                _logger.Error($"No Map received: [{ex.Message}]");
             }
             catch (DatabaseException ex)
             {
-                // log
+                _logger.Error($"Database exception: [{ex.Message}]");
+
                 throw new TourAlreadyExistsException(ex.Message);
             }
         }
@@ -52,11 +56,11 @@ namespace TourPlanner.BusinessLayer.TourHandler
             {
                 _database.AddNewTourLog(tourId, newTourLog);
 
-                // log
+                _logger.Info($"Tour log added");
             }
             catch (DatabaseException ex)
             {
-                // log
+                _logger.Error(ex.Message);
             }
         }
 
@@ -67,7 +71,7 @@ namespace TourPlanner.BusinessLayer.TourHandler
             }
             catch (DatabaseException ex)
             {
-                // log
+                _logger.Error(ex.Message);
             }
             return null;
         }
@@ -80,7 +84,7 @@ namespace TourPlanner.BusinessLayer.TourHandler
             }
             catch (DatabaseException ex)
             {
-                // log
+                _logger.Error(ex.Message);
             }
             return null;
         }
@@ -93,7 +97,7 @@ namespace TourPlanner.BusinessLayer.TourHandler
             }
             catch (DatabaseException ex)
             {
-                // log
+                _logger.Error(ex.Message);
             }
             return null;
         }
@@ -106,7 +110,7 @@ namespace TourPlanner.BusinessLayer.TourHandler
             }
             catch (NoMapImageFileFound ex)
             {
-                // log
+                _logger.Error(ex.Message);
             }
             return null;
         }
@@ -118,7 +122,7 @@ namespace TourPlanner.BusinessLayer.TourHandler
             }
             catch (DatabaseException ex)
             {
-                // log
+                _logger.Error(ex.Message);
             }
             return null;
         }
@@ -128,11 +132,11 @@ namespace TourPlanner.BusinessLayer.TourHandler
             try
             {
                 _database.ModifyTour(id, modifiedTour);
-                // log
+                _logger.Info($"Tour modified. ID: [{modifiedTour.Id}] Name: [{modifiedTour.Name}]");
             }
             catch (DatabaseException ex)
             {
-                // log
+                _logger.Error(ex.Message);
                 throw new TourAlreadyExistsException($"Tourname: {modifiedTour.Name} already exists.");
             }
         }
@@ -142,11 +146,11 @@ namespace TourPlanner.BusinessLayer.TourHandler
             try
             {
                 _database.ModifyTourLog(tourLog);
-                // log
+                _logger.Info($"Tourlog modified. Tour-ID: [{tourLog.TourId}] ID: [{tourLog.Id}]");
             }
             catch (DatabaseException ex)
             {
-                // log
+                _logger.Error(ex.Message);
             }
         }
 
@@ -156,11 +160,11 @@ namespace TourPlanner.BusinessLayer.TourHandler
             {
                 _fileSystem.DeleteImageFile(deleteTour);
                 _database.DeleteTour(deleteTour);
-                // log
+                _logger.Info($"Tour deleted: ID: [{deleteTour.Id}] Name: [{deleteTour.Name}]");
             }
             catch (DatabaseException ex)
             {
-                // log
+                _logger.Error(ex.Message);
             }
         }
 
@@ -169,11 +173,11 @@ namespace TourPlanner.BusinessLayer.TourHandler
             try
             {
                 _database.DeleteTourLog(deleteTourLog);
-                // log
+                _logger.Info($"Tourlog deleted: Tour-ID: [{deleteTourLog.TourId}] ID: [{deleteTourLog.Id}]");
             }
             catch (DatabaseException ex)
             {
-                // log
+                _logger.Error(ex.Message);
             }
         }
     } 
