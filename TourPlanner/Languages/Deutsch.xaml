@@ -45,6 +45,14 @@
     <sys:String x:Key="StringAddTourLog">Aufzeichnung hinzufügen</sys:String>
     <sys:String x:Key="StringModifyTourLog">Aufzeichnung ändern</sys:String>
     <sys:String x:Key="StringDeleteTourLog">Aufzeichnung löschen</sys:String>
+    <sys:String x:Key="StringTourAdded">Tour hinzugefügt!</sys:String>
+    <sys:String x:Key="StringTourModified">Tour bearbeitet!</sys:String>
+    <sys:String x:Key="StringTourDeleted">Tour gelöscht!</sys:String>
+    <sys:String x:Key="StringTourDeleteYesNo">Wollen Sie die Tour wirklich löschen?</sys:String>
+    <sys:String x:Key="StringTourLogAdded">Aufzeichnung hinzugefügt!</sys:String>
+    <sys:String x:Key="StringTourLogModified">Aufzeichnung bearbeitet!</sys:String>
+    <sys:String x:Key="StringTourLogDeleted">Aufzeichnung gelöscht!</sys:String>
+    <sys:String x:Key="StringTourLogDeleteYesNo">Wollen Sie die Aufzeichnung wirklich löschen?</sys:String>
     <sys:String x:Key="StringErrorNotFilled">Beginn und Ziel müssen ausgefüllt sein.</sys:String>
     <sys:String x:Key="StringErrorTourNameAlreadyExists">Tour-Name existiert bereits.</sys:String>
     <sys:String x:Key="StringErrorInvalidValuesResponse">Als Antwort kamen ungültige Werte.</sys:String>

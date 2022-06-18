@@ -3,6 +3,7 @@ using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.Models;
 using TourPlanner.Utils;
 using TourPlanner.BusinessLayer.DictionaryHandler;
+using System.Windows;
 
 namespace TourPlanner.ViewModels
 {
@@ -48,6 +49,11 @@ namespace TourPlanner.ViewModels
                 TourLog tourLog = new TourLog(CurrentTourLog.Id, CurrentTourLog.Datetime, CurrentTourLog.Comment, CurrentTourLog.Difficulty, CurrentTourLog.TotalTime, CurrentTourLog.Rating);
                 tourHandler.ModifyTourLog(tourLog);
                 mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
+                MessageBox.Show(
+                    tourDictionary.GetResourceFromDictionary("StringTourLogModified"),
+                    tourDictionary.GetResourceFromDictionary("StringTitle"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
             });
 
             CancelCommand = new RelayCommand(_ => {

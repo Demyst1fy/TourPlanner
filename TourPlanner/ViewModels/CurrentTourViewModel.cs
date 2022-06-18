@@ -119,9 +119,27 @@ namespace TourPlanner.ViewModels
             });
 
             DeleteTourCommand = new RelayCommand(_ => {
-                tourHandler.DeleteTour(CurrentTour);
-                mainViewModel.RefreshTourList(tourHandler.GetTours());
-                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+                MessageBoxResult result = MessageBox.Show(
+                    tourDictionary.GetResourceFromDictionary("StringTourDeleteYesNo"),
+                    tourDictionary.GetResourceFromDictionary("StringTitle"),
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Question);
+
+                switch (result)
+                {
+                    case MessageBoxResult.OK:
+                        tourHandler.DeleteTour(CurrentTour);
+                        mainViewModel.RefreshTourList(tourHandler.GetTours());
+                        mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+                        MessageBox.Show(
+                            tourDictionary.GetResourceFromDictionary("StringTourDeleted"),
+                            tourDictionary.GetResourceFromDictionary("StringTitle"),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+                        break;
+                    case MessageBoxResult.Cancel:
+                        break;
+                }
             });
 
             AddTourLogCommand = new RelayCommand(_ => {
@@ -133,8 +151,26 @@ namespace TourPlanner.ViewModels
             });
 
             DeleteTourLogCommand = new RelayCommand(_ => {
-                tourHandler.DeleteTourLog(CurrentTourLog);
-                RefreshTourLogList(tourHandler.GetTourLogs(CurrentTour), tourHandler, tourDictionary);
+                MessageBoxResult result = MessageBox.Show(
+                    tourDictionary.GetResourceFromDictionary("StringTourLogDeleteYesNo"),
+                    tourDictionary.GetResourceFromDictionary("StringTitle"), 
+                    MessageBoxButton.OKCancel,
+                    MessageBoxImage.Question);
+
+                switch (result)
+                {
+                    case MessageBoxResult.OK:
+                        tourHandler.DeleteTourLog(CurrentTourLog);
+                        RefreshTourLogList(tourHandler.GetTourLogs(CurrentTour), tourHandler, tourDictionary);
+                        MessageBox.Show(
+                            tourDictionary.GetResourceFromDictionary("StringTourLogDeleted"),
+                            tourDictionary.GetResourceFromDictionary("StringTitle"),
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+                        break;
+                    case MessageBoxResult.Cancel:
+                        break;
+                }
             });
         }
 

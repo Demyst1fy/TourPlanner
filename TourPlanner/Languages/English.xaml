@@ -45,6 +45,14 @@
     <sys:String x:Key="StringAddTourLog">Add Log</sys:String>
     <sys:String x:Key="StringModifyTourLog">Modify Log</sys:String>
     <sys:String x:Key="StringDeleteTourLog">Delete Log</sys:String>
+    <sys:String x:Key="StringTourAdded">Tour added!</sys:String>
+    <sys:String x:Key="StringTourModified">Tour modified!</sys:String>
+    <sys:String x:Key="StringTourDeleted">Tour deleted!</sys:String>
+    <sys:String x:Key="StringTourDeleteYesNo">Do you really want to delete the tour?</sys:String>
+    <sys:String x:Key="StringTourLogAdded">Tourlog added!</sys:String>
+    <sys:String x:Key="StringTourLogModified">Tourlog modified!</sys:String>
+    <sys:String x:Key="StringTourLogDeleted">Tourlog deleted!</sys:String>
+    <sys:String x:Key="StringTourLogDeleteYesNo">Do you really want to delete the tourlog?</sys:String>
     <sys:String x:Key="StringErrorNotFilled">Start and Destination must be filled.</sys:String>
     <sys:String x:Key="StringErrorTourNameAlreadyExists">Name of tour already exists.</sys:String>
     <sys:String x:Key="StringErrorInvalidValuesResponse">Invalid Values came as response.</sys:String>

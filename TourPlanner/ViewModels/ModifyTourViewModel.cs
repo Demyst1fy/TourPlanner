@@ -88,6 +88,12 @@ namespace TourPlanner.ViewModels
 
                     mainViewModel.RefreshTourList(tourHandler.GetTours());
                     mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+
+                    MessageBox.Show(
+                        tourDictionary.GetResourceFromDictionary("StringTourModified"),
+                        tourDictionary.GetResourceFromDictionary("StringTitle"),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
                 }
                 catch (MapquestAPIErrorException ex)
                 {

@@ -145,6 +145,11 @@ namespace TourPlanner.ViewModels
                     tourHandler.AddNewTour(newTour);
                     mainViewModel.RefreshTourList(tourHandler.GetTours());
                     mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+                    MessageBox.Show(
+                        tourDictionary.GetResourceFromDictionary("StringTourAdded"),
+                        tourDictionary.GetResourceFromDictionary("StringTitle"), 
+                        MessageBoxButton.OK, 
+                        MessageBoxImage.Information);
                 } 
                 catch (MapquestAPIErrorException ex)
                 {

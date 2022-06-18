@@ -4,6 +4,7 @@ using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.Models;
 using TourPlanner.BusinessLayer.DictionaryHandler;
 using TourPlanner.Utils;
+using System.Windows;
 
 namespace TourPlanner.ViewModels
 {
@@ -92,6 +93,11 @@ namespace TourPlanner.ViewModels
                 TourLog newTourLog = new TourLog(Comment, Difficulty, TotalTime, Rating);
                 tourHandler.AddNewTourLog(CurrentTour.Id, newTourLog);
                 mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
+                MessageBox.Show(
+                    tourDictionary.GetResourceFromDictionary("StringTourLogAdded"),
+                    tourDictionary.GetResourceFromDictionary("StringTitle"), 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Information);
             });
 
             CancelCommand = new RelayCommand(_ => {
