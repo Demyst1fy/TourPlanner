@@ -90,7 +90,8 @@ namespace TourPlanner.BusinessLayer.PDFGenerator
                 ImageData imageData = ImageDataFactory.Create($"{imagePath}/{tour.Id}.png");
                 document.Add(new Image(imageData));
                 document.Close();
-            } catch (Exception ex)
+            } 
+            catch (Exception ex)
             {
                 throw new PDFGenerationException(ex.Message);
             }

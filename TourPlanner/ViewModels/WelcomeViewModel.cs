@@ -9,11 +9,11 @@ namespace TourPlanner.ViewModels
     {
         public ICommand AddTourCommand { get; private set; }
 
-        public WelcomeViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
+        public WelcomeViewModel(MainViewModel mainViewModel)
         {
             AddTourCommand = new RelayCommand(_ =>
             {
-                mainViewModel.SelectedViewModel = new AddTourViewModel(mainViewModel, tourHandler, tourDictionary);
+                mainViewModel.SelectedViewModel = new AddTourViewModel(mainViewModel);
             });
         }
     }

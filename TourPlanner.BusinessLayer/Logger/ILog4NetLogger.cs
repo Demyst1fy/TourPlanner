@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TourPlanner.Logger
+namespace TourPlanner.BusinessLayer.Logger
 {
-    public interface ILoggerWrapper
+    public interface ILog4NetLogger
     {
         void Debug(string message);
         void Error(string message);

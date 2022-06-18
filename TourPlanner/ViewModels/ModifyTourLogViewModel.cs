@@ -39,25 +39,25 @@ namespace TourPlanner.ViewModels
         public ICommand ModifyCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
-        public ModifyTourLogViewModel(MainViewModel mainViewModel, CurrentTourViewModel currentTourViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
+        public ModifyTourLogViewModel(MainViewModel mainViewModel, CurrentTourViewModel currentTourViewModel)
         {
             CurrentTourName = mainViewModel.CurrentTour.Name;
             CurrentTourLog = currentTourViewModel.CurrentTourLog;
 
             ModifyCommand = new RelayCommand(_ => {
-                CurrentTourLog.Difficulty = tourDictionary.ChangeDifficultyToPassBL(CurrentTourLog.Difficulty);
+                CurrentTourLog.Difficulty = mainViewModel.TourDictionary.ChangeDifficultyToPassBL(CurrentTourLog.Difficulty);
                 TourLog tourLog = new TourLog(CurrentTourLog.Id, CurrentTourLog.Datetime, CurrentTourLog.Comment, CurrentTourLog.Difficulty, CurrentTourLog.TotalTime, CurrentTourLog.Rating);
-                tourHandler.ModifyTourLog(tourLog);
-                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
+                mainViewModel.TourHandler.ModifyTourLog(tourLog);
+                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel);
                 MessageBox.Show(
-                    tourDictionary.GetResourceFromDictionary("StringTourLogModified"),
-                    tourDictionary.GetResourceFromDictionary("StringTitle"),
+                    mainViewModel.TourDictionary.GetResourceFromDictionary("StringTourLogModified"),
+                    mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
             });
 
             CancelCommand = new RelayCommand(_ => {
-                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
+                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel);
             });
         }
     }

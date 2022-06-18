@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using System;
+using TourPlanner.BusinessLayer.Logger;
 using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.DataAccessLayer.Database;
 using TourPlanner.DataAccessLayer.FileSystem;
@@ -12,6 +13,8 @@ namespace TourPlanner.Unittest
     {
         private Mock<IDatabase> _database = new Mock<IDatabase>();
         private Mock<IFileSystem> _fileSystem = new Mock<IFileSystem>();
+        private Mock<ILog4NetLogger> _logger = new Mock<ILog4NetLogger>();
+
         private ITourHandler _tourHandler;
 
         private Tour testTour1;
@@ -20,7 +23,7 @@ namespace TourPlanner.Unittest
         [SetUp]
         public void Setup()
         {
-            _tourHandler = TourHandlerFactory.GetHandler(_database.Object, _fileSystem.Object);
+            _tourHandler = TourHandlerFactory.GetHandler(_database.Object, _fileSystem.Object, _logger.Object);
             testTour1 = new Tour(1, "TestTour1", "Description1", "Wien", "Graz", "Car", 200, new TimeSpan(2, 0, 0));
             testTourLog1 = new TourLog("Comment1", "Medium", new TimeSpan(2, 30, 30), 4);
         }
@@ -28,7 +31,7 @@ namespace TourPlanner.Unittest
         [Test]
         public void Test_SameInstance()
         {
-            ITourHandler _secondTourHandler = TourHandlerFactory.GetHandler(_database.Object, _fileSystem.Object);
+            ITourHandler _secondTourHandler = TourHandlerFactory.GetHandler(_database.Object, _fileSystem.Object, _logger.Object);
 
             Assert.AreEqual(_tourHandler, _secondTourHandler);
         }

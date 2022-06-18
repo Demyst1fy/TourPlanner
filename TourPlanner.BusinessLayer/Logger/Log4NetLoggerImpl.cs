@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-
-
-namespace TourPlanner.Logger
+namespace TourPlanner.BusinessLayer.Logger
 {
-    public  class Log4NetWrapper : ILoggerWrapper
+    public  class Log4NetLoggerImpl : ILog4NetLogger
     {
         private log4net.ILog _logger;
-        Log4NetWrapper(log4net.ILog logger)
+        private Log4NetLoggerImpl(log4net.ILog logger)
         {
             _logger = logger;
         }
 
-        public static Log4NetWrapper CreateLogger(string configPath)
+        public static Log4NetLoggerImpl CreateLogger()
         {
+            string configPath = ConfigurationManager.AppSettings["Log4NetConfigFile"];
             if (!File.Exists(configPath))
             {
                 throw new ArgumentException("Does not exist.", nameof(configPath));
@@ -27,7 +26,7 @@ namespace TourPlanner.Logger
 
             log4net.Config.XmlConfigurator.Configure(new FileInfo(configPath));
             var logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            return new Log4NetWrapper(logger);
+            return new Log4NetLoggerImpl(logger);
         }
         public void Info(string message)
         {
@@ -35,7 +34,7 @@ namespace TourPlanner.Logger
         }
         public void Debug(string message)
         {
-            this.Debug(message);
+            _logger.Debug(message);
         }
         public void Warn(string message)
         {
@@ -43,7 +42,7 @@ namespace TourPlanner.Logger
         }
         public void Error(string message)
         {
-            this.Error(message);
+            _logger.Error(message);
         }
         public void Fatal(string message)
         {

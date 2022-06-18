@@ -82,26 +82,26 @@ namespace TourPlanner.ViewModels
         public ICommand AddCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
-        public AddTourLogViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
+        public AddTourLogViewModel(MainViewModel mainViewModel)
         {
             CurrentTour = mainViewModel.CurrentTour;
-            Difficulty = tourDictionary.GetResourceFromDictionary("StringTourLogsDifficultyEasy");
+            Difficulty = mainViewModel.TourDictionary.GetResourceFromDictionary("StringTourLogsDifficultyEasy");
             Rating = 5;
 
             AddCommand = new RelayCommand(_ => {
-                Difficulty = tourDictionary.ChangeDifficultyToPassBL(Difficulty);
+                Difficulty = mainViewModel.TourDictionary.ChangeDifficultyToPassBL(Difficulty);
                 TourLog newTourLog = new TourLog(Comment, Difficulty, TotalTime, Rating);
-                tourHandler.AddNewTourLog(CurrentTour.Id, newTourLog);
-                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
+                mainViewModel.TourHandler.AddNewTourLog(CurrentTour.Id, newTourLog);
+                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel);
                 MessageBox.Show(
-                    tourDictionary.GetResourceFromDictionary("StringTourLogAdded"),
-                    tourDictionary.GetResourceFromDictionary("StringTitle"), 
+                    mainViewModel.TourDictionary.GetResourceFromDictionary("StringTourLogAdded"),
+                    mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"), 
                     MessageBoxButton.OK, 
                     MessageBoxImage.Information);
             });
 
             CancelCommand = new RelayCommand(_ => {
-                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
+                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel);
             });
         }
     }

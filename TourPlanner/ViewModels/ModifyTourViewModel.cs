@@ -59,7 +59,7 @@ namespace TourPlanner.ViewModels
         public ICommand ModifyCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
-        public ModifyTourViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
+        public ModifyTourViewModel(MainViewModel mainViewModel)
         {
             CurrentTour = mainViewModel.CurrentTour;
             Available = true;
@@ -68,12 +68,12 @@ namespace TourPlanner.ViewModels
                 Available = false;
                 if (string.IsNullOrEmpty(CurrentTour.Start) || string.IsNullOrEmpty(CurrentTour.Destination))
                 {
-                    ErrorText = tourDictionary.GetResourceFromDictionary("StringErrorNotFilled");
+                    ErrorText = mainViewModel.TourDictionary.GetResourceFromDictionary("StringErrorNotFilled");
                     Available = true;
                     return;
                 }
 
-                CurrentTour.TransportType = tourDictionary.ChangeTransportTypeToPassBL(CurrentTour.TransportType);
+                CurrentTour.TransportType = mainViewModel.TourDictionary.ChangeTransportTypeToPassBL(CurrentTour.TransportType);
 
                 try
                 {
@@ -84,14 +84,14 @@ namespace TourPlanner.ViewModels
                     TimeSpan time = TimeSpan.FromSeconds(tourAPIdata.Time);
 
                     Tour modifiedTour = new Tour(CurrentTour.Name, CurrentTour.Description, CurrentTour.Start, CurrentTour.Destination, CurrentTour.TransportType, distance, time);
-                    tourHandler.ModifyTour(CurrentTour.Id, modifiedTour);
+                    mainViewModel.TourHandler.ModifyTour(CurrentTour.Id, modifiedTour);
 
-                    mainViewModel.RefreshTourList(tourHandler.GetTours());
-                    mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+                    mainViewModel.RefreshTourList(mainViewModel.TourHandler.GetTours());
+                    mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel);
 
                     MessageBox.Show(
-                        tourDictionary.GetResourceFromDictionary("StringTourModified"),
-                        tourDictionary.GetResourceFromDictionary("StringTitle"),
+                        mainViewModel.TourDictionary.GetResourceFromDictionary("StringTourModified"),
+                        mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"),
                         MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
@@ -105,17 +105,17 @@ namespace TourPlanner.ViewModels
                 {
                     ErrorText = $"{nameof(MapquestAPIInvalidValuesException)}: {ex.Message} {Environment.NewLine}" +
                     $"Values: Distance({ex.InvalidDistance}), Time({TimeSpan.FromSeconds(ex.InvalidTime)} {Environment.NewLine})" +
-                    $"{tourDictionary.GetResourceFromDictionary("StringErrorInvalidValuesResponse")}";
+                    $"{mainViewModel.TourDictionary.GetResourceFromDictionary("StringErrorInvalidValuesResponse")}";
                 }
                 catch (TourAlreadyExistsException ex)
                 {
-                    ErrorText = $"{tourDictionary.GetResourceFromDictionary("StringErrorTourNameAlreadyExists")}";
+                    ErrorText = $"{mainViewModel.TourDictionary.GetResourceFromDictionary("StringErrorTourNameAlreadyExists")}";
                 }
                 Available = true;
             });
 
             CancelCommand = new RelayCommand(_ => {
-                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
+                mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel);
             });
         }
     }

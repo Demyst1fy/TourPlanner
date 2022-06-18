@@ -2,6 +2,7 @@
 using System.Windows;
 using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.BusinessLayer.DictionaryHandler;
+using TourPlanner.BusinessLayer.Logger;
 using TourPlanner.ViewModels;
 
 namespace TourPlanner
@@ -13,10 +14,14 @@ namespace TourPlanner
     {
         public MainWindow()
         {
-            InitializeComponent();
+            var tourHandler = TourHandlerFactory.GetHandler();
 
             string language = ConfigurationManager.AppSettings["Language"] ?? "English";
-            DataContext = new MainViewModel(TourHandlerFactory.GetHandler(), new TourDictionary(language));
+            var dictionary = new TourDictionary(language);
+
+            var logger = Log4NetLoggerFactory.GetLogger();
+            DataContext = new MainViewModel(tourHandler, dictionary, logger);
+            InitializeComponent();
         }
     }
 }

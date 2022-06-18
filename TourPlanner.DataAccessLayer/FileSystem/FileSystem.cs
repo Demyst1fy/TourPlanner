@@ -71,7 +71,7 @@ namespace TourPlanner.DataAccessLayer.FileSystem
                 bitmap.Freeze();
             } catch (Exception ex)
             {
-                throw new NoMapImageFileFound($"No map image file found for tour: {tour.Name} {Environment.NewLine} Message: {ex.Message}");
+                throw new NoMapImageFileFoundException($"No map image file found for tour: {tour.Name} {Environment.NewLine} Message: {ex.Message}");
             }
 
             return bitmap;

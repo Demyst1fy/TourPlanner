@@ -8,13 +8,15 @@ using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.BusinessLayer.PDFGenerator;
 using System.Windows;
 using TourPlanner.BusinessLayer.Exceptions;
+using TourPlanner.BusinessLayer.Logger;
 
 namespace TourPlanner.ViewModels
 {
     public class MainViewModel : BaseViewModel
     {
-        private ITourHandler _tourHandler;
-        private ITourDictionary _tourDictionary;
+        public ITourHandler TourHandler { get; set; }
+        public ITourDictionary TourDictionary { get; set; }
+        public ILog4NetLogger Log4NetLogger { get; set; }
 
         private BaseViewModel selectedViewModel;
         public BaseViewModel SelectedViewModel
@@ -65,7 +67,7 @@ namespace TourPlanner.ViewModels
                 {
                     currentTour = value;
                     RaisePropertyChangedEvent(nameof(CurrentTour));
-                    SelectedViewModel = new CurrentTourViewModel(this, _tourHandler, _tourDictionary);
+                    SelectedViewModel = new CurrentTourViewModel(this);
                 }
             }
         }
@@ -77,19 +79,21 @@ namespace TourPlanner.ViewModels
         public ICommand SelectEnglishCommand { get; private set; }
         public ICommand SelectGermanCommand { get; private set; }
 
-        public MainViewModel(ITourHandler tourHandler, ITourDictionary tourDictionary)
+        public MainViewModel(ITourHandler tourHandler, ITourDictionary tourDictionary, ILog4NetLogger logger)
         {
-            _tourDictionary = tourDictionary;
-            _tourHandler = tourHandler;
-            SelectedViewModel = new WelcomeViewModel(this, _tourHandler, _tourDictionary);
+            TourDictionary = tourDictionary;
+            TourHandler = tourHandler;
+            Log4NetLogger = logger;
+
+            SelectedViewModel = new WelcomeViewModel(this);
             ToursList = new ObservableCollection<Tour>();
 
             foreach (Tour item in tourHandler.GetTours())
             {
-                item.TransportType = _tourDictionary.ChangeTransportTypeToSelectedLanguage(item.TransportType);
+                item.TransportType = TourDictionary.ChangeTransportTypeToSelectedLanguage(item.TransportType);
                 ToursList.Add(item);
             }
-            NumberOfToursFound = $"{_tourDictionary.GetResourceFromDictionary("StringNumberOfToursFound")} {ToursList.Count}";
+            NumberOfToursFound = $"{TourDictionary.GetResourceFromDictionary("StringNumberOfToursFound")} {ToursList.Count}";
 
             SearchCommand = new RelayCommand(_ =>
             {
@@ -97,27 +101,27 @@ namespace TourPlanner.ViewModels
                     return;
 
                 RefreshTourList(tourHandler.SearchForTour(SearchName));
-                SelectedViewModel = new WelcomeViewModel(this, _tourHandler, _tourDictionary);
+                SelectedViewModel = new WelcomeViewModel(this);
             });
 
             ClearCommand = new RelayCommand(_ =>
             {
                 SearchName = string.Empty;
                 RefreshTourList(tourHandler.GetTours());
-                SelectedViewModel = new WelcomeViewModel(this, _tourHandler, _tourDictionary);
+                SelectedViewModel = new WelcomeViewModel(this);
             });
 
             AddTourCommand = new RelayCommand(_ =>
             {
-                SelectedViewModel = new AddTourViewModel(this, _tourHandler, _tourDictionary);
+                SelectedViewModel = new AddTourViewModel(this);
             });
 
             GenerateTourSummarizeReportCommand = new RelayCommand(_ =>
             {
                 try
                 {
-                    PDFGenerator.GenerateSummarizedReport(_tourHandler, _tourDictionary, ToursList);
-
+                    PDFGenerator.GenerateSummarizedReport(TourHandler, TourDictionary, ToursList);
+                    Log4NetLogger.Info(tourDictionary.GetResourceFromDictionary("StringPDFGenerationSuccess"));
                     MessageBox.Show(
                         tourDictionary.GetResourceFromDictionary("StringPDFGenerationSuccess"),
                         tourDictionary.GetResourceFromDictionary("StringTitle"),
@@ -126,6 +130,8 @@ namespace TourPlanner.ViewModels
                 }
                 catch (NoToursException ex)
                 {
+                    Log4NetLogger.Error(ex.Message);
+                    Log4NetLogger.Error(tourDictionary.GetResourceFromDictionary("StringErrorNoTours"));
                     MessageBox.Show(
                         tourDictionary.GetResourceFromDictionary("StringErrorNoTours"),
                         tourDictionary.GetResourceFromDictionary("StringTitle"),
@@ -134,6 +140,8 @@ namespace TourPlanner.ViewModels
                 }
                 catch (PDFGenerationException ex)
                 {
+                    Log4NetLogger.Error(ex.Message);
+                    Log4NetLogger.Error(tourDictionary.GetResourceFromDictionary("StringErrorPDFGenerationError"));
                     MessageBox.Show(
                         tourDictionary.GetResourceFromDictionary("StringErrorPDFGenerationError"),
                         tourDictionary.GetResourceFromDictionary("StringTitle"),
@@ -144,13 +152,13 @@ namespace TourPlanner.ViewModels
 
             SelectEnglishCommand = new RelayCommand(_ =>
             {
-                _tourDictionary.AddDictionaryToApp("English");
+                TourDictionary.AddDictionaryToApp("English");
                 RefreshTourList(tourHandler.GetTours());
             });
 
             SelectGermanCommand = new RelayCommand(_ =>
             {
-                _tourDictionary.AddDictionaryToApp("Deutsch");
+                TourDictionary.AddDictionaryToApp("Deutsch");
                 RefreshTourList(tourHandler.GetTours());
             });
         }
@@ -160,7 +168,7 @@ namespace TourPlanner.ViewModels
             ToursList.Clear();
             foreach (Tour item in items)
             {
-                item.TransportType = _tourDictionary.ChangeTransportTypeToSelectedLanguage(item.TransportType);
+                item.TransportType = TourDictionary.ChangeTransportTypeToSelectedLanguage(item.TransportType);
 
                 if (SelectedViewModel is CurrentTourViewModel)
                 {
@@ -169,12 +177,12 @@ namespace TourPlanner.ViewModels
                     {
                         currentTourViewModel.CurrentTour = item;
                     }
-                    currentTourViewModel.RefreshTourLogList(_tourHandler.GetTourLogs(CurrentTour), _tourHandler, _tourDictionary);
+                    currentTourViewModel.RefreshTourLogList(TourHandler.GetTourLogs(CurrentTour), this);
                 }
 
                 ToursList.Add(item);
             }
-            NumberOfToursFound = $"{_tourDictionary.GetResourceFromDictionary("StringNumberOfToursFound")} {ToursList.Count}";
+            NumberOfToursFound = $"{TourDictionary.GetResourceFromDictionary("StringNumberOfToursFound")} {ToursList.Count}";
         }
     }
 }

@@ -31,7 +31,7 @@ namespace TourPlanner.DataAccessLayer.Database
             CreateTablesIfNotExist();
         }
 
-        public static IDatabase GetDatabase()
+        public static IDatabase CreateDatabase()
         {
             if (_database == null)
             {

@@ -101,42 +101,42 @@ namespace TourPlanner.ViewModels
         public ICommand DeleteTourLogCommand { get; set; }
 
 
-        public CurrentTourViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
+        public CurrentTourViewModel(MainViewModel mainViewModel)
         {
             CurrentTour = mainViewModel.CurrentTour;
-            MapImage = tourHandler.GetImageFile(CurrentTour);
+            MapImage = mainViewModel.TourHandler.GetImageFile(CurrentTour);
 
             TourLogsList = new ObservableCollection<TourLog>();
-            foreach (TourLog item in tourHandler.GetTourLogs(CurrentTour))
+            foreach (TourLog item in mainViewModel.TourHandler.GetTourLogs(CurrentTour))
             {
-                item.Difficulty = tourDictionary.ChangeDifficultyToSelectedLanguage(item.Difficulty);
+                item.Difficulty = mainViewModel.TourDictionary.ChangeDifficultyToSelectedLanguage(item.Difficulty);
                 TourLogsList.Add(item);
             }
-            NumberOfTourLogsFound = $"{tourDictionary.GetResourceFromDictionary("StringNumberOfTourLogsFound")} {TourLogsList.Count}";
+            NumberOfTourLogsFound = $"{mainViewModel.TourDictionary.GetResourceFromDictionary("StringNumberOfTourLogsFound")} {TourLogsList.Count}";
 
-            Popularity = ComputedTourAttribute.CalculatePopularity(tourHandler, CurrentTour);
-            ChildFriendliness = ComputedTourAttribute.CalculateChildFriendliness(tourHandler, tourDictionary, CurrentTour);
+            Popularity = ComputedTourAttribute.CalculatePopularity(mainViewModel.TourHandler, CurrentTour);
+            ChildFriendliness = ComputedTourAttribute.CalculateChildFriendliness(mainViewModel.TourHandler, mainViewModel.TourDictionary, CurrentTour);
 
             ModifyTourCommand = new RelayCommand(_ => {
-                mainViewModel.SelectedViewModel = new ModifyTourViewModel(mainViewModel, tourHandler, tourDictionary);
+                mainViewModel.SelectedViewModel = new ModifyTourViewModel(mainViewModel);
             });
 
             DeleteTourCommand = new RelayCommand(_ => {
                 MessageBoxResult result = MessageBox.Show(
-                    tourDictionary.GetResourceFromDictionary("StringTourDeleteYesNo"),
-                    tourDictionary.GetResourceFromDictionary("StringTitle"),
+                    mainViewModel.TourDictionary.GetResourceFromDictionary("StringTourDeleteYesNo"),
+                    mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"),
                     MessageBoxButton.OKCancel,
                     MessageBoxImage.Question);
 
                 switch (result)
                 {
                     case MessageBoxResult.OK:
-                        tourHandler.DeleteTour(CurrentTour);
-                        mainViewModel.RefreshTourList(tourHandler.GetTours());
-                        mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+                        mainViewModel.TourHandler.DeleteTour(CurrentTour);
+                        mainViewModel.RefreshTourList(mainViewModel.TourHandler.GetTours());
+                        mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel);
                         MessageBox.Show(
-                            tourDictionary.GetResourceFromDictionary("StringTourDeleted"),
-                            tourDictionary.GetResourceFromDictionary("StringTitle"),
+                            mainViewModel.TourDictionary.GetResourceFromDictionary("StringTourDeleted"),
+                            mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"),
                             MessageBoxButton.OK,
                             MessageBoxImage.Information);
                         break;
@@ -148,47 +148,50 @@ namespace TourPlanner.ViewModels
             GenerateSingleTourReportCommand = new RelayCommand(_ => {
                 try
                 {
-                    PDFGenerator.GenerateSingleReport(tourDictionary, CurrentTour, TourLogsList, Popularity, ChildFriendliness);
+                    PDFGenerator.GenerateSingleReport(mainViewModel.TourDictionary, CurrentTour, TourLogsList, Popularity, ChildFriendliness);
 
+                    mainViewModel.Log4NetLogger.Info(mainViewModel.TourDictionary.GetResourceFromDictionary("StringPDFGenerationSuccess"));
                     MessageBox.Show(
-                        tourDictionary.GetResourceFromDictionary("StringPDFGenerationSuccess"),
-                        tourDictionary.GetResourceFromDictionary("StringTitle"),
+                        mainViewModel.TourDictionary.GetResourceFromDictionary("StringPDFGenerationSuccess"),
+                        mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"),
                         MessageBoxButton.OK,
                         MessageBoxImage.Information);
                 }
                 catch(PDFGenerationException ex)
                 {
+                    mainViewModel.Log4NetLogger.Error(ex.Message);
+                    mainViewModel.Log4NetLogger.Error(mainViewModel.TourDictionary.GetResourceFromDictionary("StringErrorPDFGenerationError"));
                     MessageBox.Show(
-                        tourDictionary.GetResourceFromDictionary("StringErrorPDFGenerationError"),
-                        tourDictionary.GetResourceFromDictionary("StringTitle"),
+                        mainViewModel.TourDictionary.GetResourceFromDictionary("StringErrorPDFGenerationError"),
+                        mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"),
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
                 }
             });
 
             AddTourLogCommand = new RelayCommand(_ => {
-                mainViewModel.SelectedViewModel = new AddTourLogViewModel(mainViewModel, tourHandler, tourDictionary);
+                mainViewModel.SelectedViewModel = new AddTourLogViewModel(mainViewModel);
             });
 
             ModifyTourLogCommand = new RelayCommand(_ => {
-                mainViewModel.SelectedViewModel = new ModifyTourLogViewModel(mainViewModel, this, tourHandler, tourDictionary);
+                mainViewModel.SelectedViewModel = new ModifyTourLogViewModel(mainViewModel, this);
             });
 
             DeleteTourLogCommand = new RelayCommand(_ => {
                 MessageBoxResult result = MessageBox.Show(
-                    tourDictionary.GetResourceFromDictionary("StringTourLogDeleteYesNo"),
-                    tourDictionary.GetResourceFromDictionary("StringTitle"), 
+                    mainViewModel.TourDictionary.GetResourceFromDictionary("StringTourLogDeleteYesNo"),
+                    mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"), 
                     MessageBoxButton.OKCancel,
                     MessageBoxImage.Question);
 
                 switch (result)
                 {
                     case MessageBoxResult.OK:
-                        tourHandler.DeleteTourLog(CurrentTourLog);
-                        RefreshTourLogList(tourHandler.GetTourLogs(CurrentTour), tourHandler, tourDictionary);
+                        mainViewModel.TourHandler.DeleteTourLog(CurrentTourLog);
+                        RefreshTourLogList(mainViewModel.TourHandler.GetTourLogs(CurrentTour), mainViewModel);
                         MessageBox.Show(
-                            tourDictionary.GetResourceFromDictionary("StringTourLogDeleted"),
-                            tourDictionary.GetResourceFromDictionary("StringTitle"),
+                            mainViewModel.TourDictionary.GetResourceFromDictionary("StringTourLogDeleted"),
+                            mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"),
                             MessageBoxButton.OK,
                             MessageBoxImage.Information);
                         break;
@@ -198,7 +201,7 @@ namespace TourPlanner.ViewModels
             });
         }
 
-        public void RefreshTourLogList(IEnumerable<TourLog> tourLogList, ITourHandler tourHandler, ITourDictionary tourDictionary)
+        public void RefreshTourLogList(IEnumerable<TourLog> tourLogList, MainViewModel mainViewModel)
         {
             TourLog? tmpTourLog = null;
             if (CurrentTourLog != null)
@@ -209,7 +212,7 @@ namespace TourPlanner.ViewModels
             TourLogsList.Clear();
             foreach (TourLog item in tourLogList)
             {
-                item.Difficulty = tourDictionary.ChangeDifficultyToSelectedLanguage(item.Difficulty);
+                item.Difficulty = mainViewModel.TourDictionary.ChangeDifficultyToSelectedLanguage(item.Difficulty);
 
                 if(tmpTourLog != null)
                     if (tmpTourLog.Id == item.Id)
@@ -218,9 +221,9 @@ namespace TourPlanner.ViewModels
                 TourLogsList.Add(item);
             }
 
-            NumberOfTourLogsFound = $"{tourDictionary.GetResourceFromDictionary("StringNumberOfTourLogsFound")} {TourLogsList.Count}";
-            Popularity = ComputedTourAttribute.CalculatePopularity(tourHandler, CurrentTour);
-            ChildFriendliness = ComputedTourAttribute.CalculateChildFriendliness(tourHandler, tourDictionary, CurrentTour);
+            NumberOfTourLogsFound = $"{mainViewModel.TourDictionary.GetResourceFromDictionary("StringNumberOfTourLogsFound")} {TourLogsList.Count}";
+            Popularity = ComputedTourAttribute.CalculatePopularity(mainViewModel.TourHandler, CurrentTour);
+            ChildFriendliness = ComputedTourAttribute.CalculateChildFriendliness(mainViewModel.TourHandler, mainViewModel.TourDictionary, CurrentTour);
         }
     }
 }

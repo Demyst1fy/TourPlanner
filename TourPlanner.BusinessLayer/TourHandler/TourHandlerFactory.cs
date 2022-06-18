@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TourPlanner.BusinessLayer.Logger;
 using TourPlanner.DataAccessLayer.Database;
 using TourPlanner.DataAccessLayer.FileSystem;
 
@@ -16,16 +12,16 @@ namespace TourPlanner.BusinessLayer.TourHandler
         {
             if (tourHandler == null)
             {
-                tourHandler = new TourHandlerImpl();
+                tourHandler = TourHandlerImpl.CreateHandler();
             }
             return tourHandler;
         }
 
-        public static ITourHandler GetHandler(IDatabase database, IFileSystem fileSystem)
+        public static ITourHandler GetHandler(IDatabase database, IFileSystem fileSystem, ILog4NetLogger logger)
         {
             if (tourHandler == null)
             {
-                tourHandler = new TourHandlerImpl(database, fileSystem);
+                tourHandler = TourHandlerImpl.CreateHandler(database, fileSystem, logger);
             }
             return tourHandler;
         }

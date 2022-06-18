@@ -6,6 +6,7 @@ using TourPlanner.Models;
 using TourPlanner.ViewModels;
 using TourPlanner.BusinessLayer.DictionaryHandler;
 using TourPlanner.BusinessLayer.TourHandler;
+using TourPlanner.BusinessLayer.Logger;
 
 namespace TourPlanner.Unittest
 {
@@ -14,6 +15,7 @@ namespace TourPlanner.Unittest
         private MainViewModel viewModel;
         private Mock<ITourHandler> mockTourHandler;
         private Mock<ITourDictionary> mockTourDictionary;
+        private Mock<ILog4NetLogger> mockLogger;
 
         private Tour testTour1;
         private Tour testTour2;
@@ -24,7 +26,7 @@ namespace TourPlanner.Unittest
         {
             mockTourHandler = new Mock<ITourHandler>();
             mockTourDictionary = new Mock<ITourDictionary>();
-            viewModel = new MainViewModel(mockTourHandler.Object, mockTourDictionary.Object);
+            viewModel = new MainViewModel(mockTourHandler.Object, mockTourDictionary.Object, mockLogger.Object);
             testTour1 = new Tour(1, "TestTour1", "Description1", "Wien", "Graz", "Car", 200, new TimeSpan(2, 0, 0));
             testTour2 = new Tour(1, "TestTour2", "Description2", "Graz", "Wien", "Car", 200, new TimeSpan(2, 0, 0));
             testTourLog1 = new TourLog("Comment1", "Medium", new TimeSpan(2, 30, 30), 4);
@@ -44,7 +46,7 @@ namespace TourPlanner.Unittest
             tourList.Add(testTour2);
             mockTourHandler.Setup(mock => mock.GetTours()).Returns(tourList);
 
-            viewModel = new MainViewModel(mockTourHandler.Object, mockTourDictionary.Object);
+            viewModel = new MainViewModel(mockTourHandler.Object, mockTourDictionary.Object, mockLogger.Object);
 
             Assert.AreEqual(2, viewModel.ToursList.Count);
         }

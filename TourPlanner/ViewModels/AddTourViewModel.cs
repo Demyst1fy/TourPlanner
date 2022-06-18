@@ -116,9 +116,9 @@ namespace TourPlanner.ViewModels
         public ICommand AddCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
-        public AddTourViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
+        public AddTourViewModel(MainViewModel mainViewModel)
         {
-            TransportType = tourDictionary.GetResourceFromDictionary("StringTourCar");
+            TransportType = mainViewModel.TourDictionary.GetResourceFromDictionary("StringTourCar");
             Available = true;
 
             AddCommand = new RelayCommand(async _ =>
@@ -126,12 +126,12 @@ namespace TourPlanner.ViewModels
                 Available = false;
                 if (string.IsNullOrEmpty(Start) || string.IsNullOrEmpty(Destination))
                 {
-                    ErrorText = tourDictionary.GetResourceFromDictionary("StringErrorNotFilled");
+                    ErrorText = mainViewModel.TourDictionary.GetResourceFromDictionary("StringErrorNotFilled");
                     Available = true;
                     return;
                 }
 
-                TransportType = tourDictionary.ChangeTransportTypeToPassBL(TransportType);
+                TransportType = mainViewModel.TourDictionary.ChangeTransportTypeToPassBL(TransportType);
 
                 try
                 {
@@ -142,36 +142,40 @@ namespace TourPlanner.ViewModels
                     TimeSpan time = TimeSpan.FromSeconds(tourAPIdata.Time);
 
                     Tour newTour = new Tour(Name, Description, Start, Destination, TransportType, distance, time);
-                    tourHandler.AddNewTour(newTour);
-                    mainViewModel.RefreshTourList(tourHandler.GetTours());
-                    mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+                    mainViewModel.TourHandler.AddNewTour(newTour);
+                    mainViewModel.RefreshTourList(mainViewModel.TourHandler.GetTours());
+                    mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel);
+
                     MessageBox.Show(
-                        tourDictionary.GetResourceFromDictionary("StringTourAdded"),
-                        tourDictionary.GetResourceFromDictionary("StringTitle"), 
+                        mainViewModel.TourDictionary.GetResourceFromDictionary("StringTourAdded"),
+                        mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"), 
                         MessageBoxButton.OK, 
                         MessageBoxImage.Information);
                 } 
                 catch (MapquestAPIErrorException ex)
                 {
+                    mainViewModel.Log4NetLogger.Error(ex.Message);
                     ErrorText = $"{nameof(MapquestAPIErrorException)}: {ex.Message} {Environment.NewLine}" +
                     $"Response-Code: {ex.ErrorCode} {Environment.NewLine}" +
                     $"Response-Message: {ex.ErrorMessage}";
                 }
                 catch (MapquestAPIInvalidValuesException ex)
                 {
+                    mainViewModel.Log4NetLogger.Error(ex.Message);
                     ErrorText = $"{nameof(MapquestAPIInvalidValuesException)}: {ex.Message} {Environment.NewLine}" +
                     $"Values: Distance({ex.InvalidDistance}), Time({TimeSpan.FromSeconds(ex.InvalidTime)} {Environment.NewLine})" +
-                    $"{tourDictionary.GetResourceFromDictionary("StringErrorInvalidValuesResponse")}";
+                    $"{mainViewModel.TourDictionary.GetResourceFromDictionary("StringErrorInvalidValuesResponse")}";
                 }
                 catch (TourAlreadyExistsException ex)
                 {
-                    ErrorText = $"{tourDictionary.GetResourceFromDictionary("StringErrorTourNameAlreadyExists")}";
+                    mainViewModel.Log4NetLogger.Error(ex.Message);
+                    ErrorText = $"{mainViewModel.TourDictionary.GetResourceFromDictionary("StringErrorTourNameAlreadyExists")}";
                 }
                 Available = true;
             });
 
             CancelCommand = new RelayCommand(_ => {
-                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel);
             });
         }
     }
