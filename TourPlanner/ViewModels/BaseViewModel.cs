@@ -8,7 +8,7 @@ namespace TourPlanner.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged 
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void RaisePropertyChangedEvent([CallerMemberName] string propertyName = "") 
         {

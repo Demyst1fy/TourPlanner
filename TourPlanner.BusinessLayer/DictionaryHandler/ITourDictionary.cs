@@ -1,4 +1,4 @@
-﻿namespace TourPlanner.DictionaryHandler
+﻿namespace TourPlanner.BusinessLayer.DictionaryHandler
 {
     public interface ITourDictionary
     {

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using TourPlanner.BusinessLayer;
 using TourPlanner.Models;
 using TourPlanner.Utils;
-using TourPlanner.DictionaryHandler;
+using TourPlanner.BusinessLayer.DictionaryHandler;
+using TourPlanner.BusinessLayer.TourHandler;
 
 namespace TourPlanner.ViewModels
 {
@@ -12,16 +12,8 @@ namespace TourPlanner.ViewModels
     {
         private ITourHandler _tourHandler;
         private ITourDictionary _tourDictionary;
-        private BaseViewModel selectedViewModel;
-        private string searchName;
-        private Tour currentTour;
-        public ObservableCollection<Tour> ToursList { get; private set; }
-        public ICommand SearchCommand { get; private set; }
-        public ICommand ClearCommand { get; private set; }
-        public ICommand AddTourCommand { get; private set; }
-        public ICommand SelectEnglishCommand { get; private set; }
-        public ICommand SelectGermanCommand { get; private set; }
 
+        private BaseViewModel selectedViewModel;
         public BaseViewModel SelectedViewModel
         {
             get
@@ -35,6 +27,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private string searchName = string.Empty;
         public string SearchName
         {
             get { return searchName; }
@@ -48,6 +41,18 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private string numberOfToursFound;
+        public string NumberOfToursFound
+        {
+            get { return numberOfToursFound; }
+            set
+            {
+                numberOfToursFound = value;
+                RaisePropertyChangedEvent(nameof(NumberOfToursFound));
+            }
+        }
+
+        private Tour currentTour;
         public Tour CurrentTour
         {
             get { return currentTour; }
@@ -61,22 +66,26 @@ namespace TourPlanner.ViewModels
                 }
             }
         }
+        public ObservableCollection<Tour> ToursList { get; private set; }
+        public ICommand SearchCommand { get; private set; }
+        public ICommand ClearCommand { get; private set; }
+        public ICommand AddTourCommand { get; private set; }
+        public ICommand SelectEnglishCommand { get; private set; }
+        public ICommand SelectGermanCommand { get; private set; }
 
         public MainViewModel(ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
-            this._tourDictionary = tourDictionary;
+            _tourDictionary = tourDictionary;
             _tourHandler = tourHandler;
-
             SelectedViewModel = new WelcomeViewModel(this, _tourHandler, _tourDictionary);
-
             ToursList = new ObservableCollection<Tour>();
 
             foreach (Tour item in tourHandler.GetTours())
             {
                 item.TransportType = _tourDictionary.ChangeTransportTypeToSelectedLanguage(item.TransportType);
-
                 ToursList.Add(item);
             }
+            NumberOfToursFound = $"{_tourDictionary.GetResourceFromDictionary("StringNumberOfToursFound")} {ToursList.Count}";
 
             SearchCommand = new RelayCommand(_ =>
             {
@@ -89,25 +98,25 @@ namespace TourPlanner.ViewModels
 
             ClearCommand = new RelayCommand(_ =>
             {
-                SearchName = "";
+                SearchName = string.Empty;
                 RefreshTourList(tourHandler.GetTours());
                 SelectedViewModel = new WelcomeViewModel(this, _tourHandler, _tourDictionary);
             });
 
             AddTourCommand = new RelayCommand(_ =>
             {
-                SelectedViewModel = new AddTourViewModel(this, tourHandler, tourDictionary);
+                SelectedViewModel = new AddTourViewModel(this, _tourHandler, tourDictionary);
             });
 
             SelectEnglishCommand = new RelayCommand(_ =>
             {
-                _tourDictionary.AddDictionaryToApp("./Languages/English.xaml");
+                _tourDictionary.AddDictionaryToApp("English");
                 RefreshTourList(tourHandler.GetTours());
             });
 
             SelectGermanCommand = new RelayCommand(_ =>
             {
-                _tourDictionary.AddDictionaryToApp("./Languages/Deutsch.xaml");
+                _tourDictionary.AddDictionaryToApp("Deutsch");
                 RefreshTourList(tourHandler.GetTours());
             });
         }
@@ -121,7 +130,7 @@ namespace TourPlanner.ViewModels
 
                 if (SelectedViewModel is CurrentTourViewModel)
                 {
-                    var currentTourViewModel = SelectedViewModel as CurrentTourViewModel;
+                    CurrentTourViewModel currentTourViewModel = SelectedViewModel as CurrentTourViewModel;
                     if(currentTourViewModel.CurrentTour.Id == item.Id)
                     {
                         currentTourViewModel.CurrentTour = item;
@@ -131,6 +140,7 @@ namespace TourPlanner.ViewModels
 
                 ToursList.Add(item);
             }
+            NumberOfToursFound = $"{_tourDictionary.GetResourceFromDictionary("StringNumberOfToursFound")} {ToursList.Count}";
         }
     }
 }

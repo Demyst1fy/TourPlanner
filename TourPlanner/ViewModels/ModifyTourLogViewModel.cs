@@ -1,19 +1,14 @@
 ﻿using System.Windows.Input;
-using TourPlanner.BusinessLayer;
+using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.Models;
 using TourPlanner.Utils;
-using TourPlanner.DictionaryHandler;
+using TourPlanner.BusinessLayer.DictionaryHandler;
 
 namespace TourPlanner.ViewModels
 {
     public class ModifyTourLogViewModel : BaseViewModel
     {
-        private ITourHandler tourHandler;
-        private string currentTourName;
-        private TourLog currentTourLog;
-        public ICommand ModifyCommand { get; set; }
-        public ICommand CancelCommand { get; set; }
-
+        private string currentTourName = string.Empty;
         public string CurrentTourName
         {
             get
@@ -27,6 +22,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private TourLog currentTourLog;
         public TourLog CurrentTourLog
         {
             get
@@ -39,6 +35,8 @@ namespace TourPlanner.ViewModels
                 RaisePropertyChangedEvent(nameof(CurrentTourLog));
             }
         }
+        public ICommand ModifyCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
 
         public ModifyTourLogViewModel(MainViewModel mainViewModel, CurrentTourViewModel currentTourViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
@@ -46,13 +44,9 @@ namespace TourPlanner.ViewModels
             CurrentTourLog = currentTourViewModel.CurrentTourLog;
 
             ModifyCommand = new RelayCommand(_ => {
-
                 CurrentTourLog.Difficulty = tourDictionary.ChangeDifficultyToPassBL(CurrentTourLog.Difficulty);
-
                 TourLog tourLog = new TourLog(CurrentTourLog.Id, CurrentTourLog.Datetime, CurrentTourLog.Comment, CurrentTourLog.Difficulty, CurrentTourLog.TotalTime, CurrentTourLog.Rating);
-
                 tourHandler.ModifyTourLog(tourLog);
-
                 mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
             });
 

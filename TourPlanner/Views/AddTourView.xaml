@@ -4,7 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewmodels="clr-namespace:TourPlanner.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:AddTourViewModel}"
+             xmlns:converter="clr-namespace:TourPlanner.Utils"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <converter:VisibilityConverter x:Key="VisibilityConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -14,7 +18,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Margin="5">
+        <StackPanel Margin="5" IsEnabled="{Binding Available}">
             <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{DynamicResource StringNewTour}"/>
             <StackPanel>
                 <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourName}"/>
@@ -58,7 +62,7 @@
             </WrapPanel>
             
         </StackPanel>
-        <TextBlock Foreground="Red" Margin="5" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding IsError}" FontSize="16" TextDecorations="Underline" Text="{Binding ErrorText}"/>
+        <TextBlock Foreground="Red" Margin="5" Grid.Row="1" Grid.ColumnSpan="2" Visibility="{Binding ErrorText, Converter={StaticResource VisibilityConverter}}" FontSize="16" TextDecorations="Underline" Text="{Binding ErrorText}"/>
 
     </Grid>
 </UserControl>

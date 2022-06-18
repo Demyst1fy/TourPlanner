@@ -27,7 +27,7 @@
             </StackPanel>
             <StackPanel>
                 <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsDuration}"/>
-                <wpfTool:TimeSpanUpDown FontSize="16" Text="{Binding TotalTime}"/>
+                <wpfTool:TimeSpanUpDown Minimum="00:00:00:00" FontSize="16" Text="{Binding TotalTime}"/>
             </StackPanel>
             <StackPanel>
                 <TextBlock FontSize="16" FontStyle="Italic" FontWeight="SemiBold" Text="{DynamicResource StringTourLogsRating}"/>

@@ -1,7 +1,7 @@
 ﻿using System.Windows.Input;
-using TourPlanner.BusinessLayer;
+using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.Utils;
-using TourPlanner.DictionaryHandler;
+using TourPlanner.BusinessLayer.DictionaryHandler;
 
 namespace TourPlanner.ViewModels
 {

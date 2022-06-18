@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TourPlanner.DictionaryHandler;
+using TourPlanner.BusinessLayer.TourHandler;
+using TourPlanner.BusinessLayer.DictionaryHandler;
 using TourPlanner.Models;
 
-namespace TourPlanner.BusinessLayer
+namespace TourPlanner.BusinessLayer.TourAttributes
 {
     public static class ComputedTourAttribute
     {
@@ -12,6 +13,10 @@ namespace TourPlanner.BusinessLayer
         {
             var currentTourLogs = tourHandler.GetTourLogs(currentTour);
             double computedValue = (double)currentTourLogs.Count() / tourHandler.GetAllTourLogs().Count;
+
+            if (double.IsNaN(computedValue) || double.IsInfinity(computedValue)) 
+                return 0;
+
             return Math.Round(computedValue * 100.0, 0);
         }
 

@@ -1,24 +1,23 @@
 ﻿using Newtonsoft.Json;
 using System.Configuration;
-using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Drawing;
-using TourPlanner.BusinessLayer.JsonClasses;
+using TourPlanner.BusinessLayer.TourAttributes;
 using TourPlanner.Models;
 using System;
 using System.Collections.Generic;
+using TourPlanner.BusinessLayer.Exceptions;
 
-namespace TourPlanner.BusinessLayer
+namespace TourPlanner.BusinessLayer.APIRequest
 {
-    public static class APIRequest
+    public static class MapquestAPIRequest
     {
         public static async Task<TourAPIData?> RequestDirection(string from, string to, string transportType)
         {
-            HttpClient client = new HttpClient();
 
-            var apikey = ConfigurationManager.AppSettings["MapquestAPIKey"];
+            var apiKey = ConfigurationManager.AppSettings["MapquestAPIKey"];
+            var mapQuestAPIDirectionLink = ConfigurationManager.AppSettings["MapQuestAPIDirection"];
+            HttpClient client = new HttpClient();
 
             string transportTypeOnUrl;
             switch (transportType)
@@ -39,23 +38,31 @@ namespace TourPlanner.BusinessLayer
             }
 
             HttpResponseMessage response = await client.GetAsync(
-                $"http://www.mapquestapi.com/directions/v2/route?" +
-                $"&key={apikey}" +
-                $"&unit=k" +
-                $"&routeType={transportTypeOnUrl}" +
-                $"&from={from}" +
-                $"&to={to}");
+            $"{mapQuestAPIDirectionLink}" +
+            $"key={apiKey}" +
+            $"&unit=k" +
+            $"&routeType={transportTypeOnUrl}" +
+            $"&from={from}" +
+            $"&to={to}");
 
             response.EnsureSuccessStatusCode();
 
             string responseBody = await response.Content.ReadAsStringAsync();
-
-            Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(responseBody);
+            Root? myDeserializedClass = JsonConvert.DeserializeObject<Root>(responseBody);
 
             int statusCode = myDeserializedClass.info.statuscode;
             List<object> messages = myDeserializedClass.info.messages;
+            if (int.Parse(statusCode.ToString().Substring(0, 1)) >= 4 || messages.Count != 0)
+            {
+                throw new MapquestAPIErrorException("Mapquest Status Error", statusCode, messages[0].ToString());
+            }
+
             double distance = myDeserializedClass.route.distance;
             int time = myDeserializedClass.route.time;
+            if (distance <= 0.0 || time <= 0)
+            {
+                throw new MapquestAPIInvalidValuesException("Mapquest Invalid Values Error", distance, time);
+            }
 
             return new TourAPIData(statusCode, messages, distance, time);
         }

@@ -3,26 +3,52 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using TourPlanner.BusinessLayer;
+using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.Models;
 using TourPlanner.Utils;
-using TourPlanner.DictionaryHandler;
+using TourPlanner.BusinessLayer.DictionaryHandler;
+using TourPlanner.BusinessLayer.TourAttributes;
 
 namespace TourPlanner.ViewModels
 {
     public class CurrentTourViewModel : BaseViewModel
     {
         private Tour currentTour;
+        public Tour CurrentTour
+        {
+            get
+            {
+                return currentTour;
+            }
+            set { currentTour = value;
+                RaisePropertyChangedEvent(nameof(CurrentTour)); 
+            }
+        }
+
         private TourLog currentTourLog;
-        private ImageSource mapImage;
-        public ObservableCollection<TourLog> TourLogsList { get; private set; }
-        public ICommand AddTourLogCommand { get; set; }
-        public ICommand ModifyTourCommand { get; set; }
-        public ICommand DeleteTourCommand { get; set; }
+        public TourLog CurrentTourLog
+        {
+            get
+            {
+                return currentTourLog;
+            }
+            set
+            {
+                currentTourLog = value;
+                RaisePropertyChangedEvent(nameof(CurrentTourLog));
+            }
+        }
 
-        public ICommand ModifyTourLogCommand { get; set; }
-
-        public ICommand DeleteTourLogCommand { get; set; }
+        private ImageSource? mapImage;
+        public ImageSource? MapImage
+        {
+            get { return mapImage; }
+            set
+            {
+                mapImage = value;
+                RaisePropertyChangedEvent(nameof(MapImage));
+            }
+        }
 
         private double popularity;
         public double Popularity
@@ -52,45 +78,29 @@ namespace TourPlanner.ViewModels
             }
         }
 
-        public Tour CurrentTour
+        private string numberOfTourLogsFound;
+        public string NumberOfTourLogsFound
         {
-            get
+            get { return numberOfTourLogsFound; }
+            set
             {
-                return currentTour;
-            }
-            set { currentTour = value;
-                RaisePropertyChangedEvent(nameof(CurrentTour)); 
+                numberOfTourLogsFound = value;
+                RaisePropertyChangedEvent(nameof(NumberOfTourLogsFound));
             }
         }
 
-        public TourLog CurrentTourLog
-        {
-            get
-            {
-                return currentTourLog;
-            }
-            set
-            {
-                currentTourLog = value;
-                RaisePropertyChangedEvent(nameof(CurrentTourLog));
-            }
-        }
+        public ObservableCollection<TourLog> TourLogsList { get; private set; }
 
-        public ImageSource MapImage
-        {
-            get { return mapImage; }
-            set
-            {
-                mapImage = value;
-                RaisePropertyChangedEvent(nameof(MapImage));
-            }
-        }
+        public ICommand ModifyTourCommand { get; set; }
+        public ICommand DeleteTourCommand { get; set; }
+        public ICommand AddTourLogCommand { get; set; }
+        public ICommand ModifyTourLogCommand { get; set; }
+        public ICommand DeleteTourLogCommand { get; set; }
 
 
         public CurrentTourViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
             CurrentTour = mainViewModel.CurrentTour;
-
             MapImage = tourHandler.GetImageFile(CurrentTour);
 
             TourLogsList = new ObservableCollection<TourLog>();
@@ -99,6 +109,7 @@ namespace TourPlanner.ViewModels
                 item.Difficulty = tourDictionary.ChangeDifficultyToSelectedLanguage(item.Difficulty);
                 TourLogsList.Add(item);
             }
+            NumberOfTourLogsFound = $"{tourDictionary.GetResourceFromDictionary("StringNumberOfTourLogsFound")} {TourLogsList.Count}";
 
             Popularity = ComputedTourAttribute.CalculatePopularity(tourHandler, CurrentTour);
             ChildFriendliness = ComputedTourAttribute.CalculateChildFriendliness(tourHandler, tourDictionary, CurrentTour);
@@ -109,7 +120,6 @@ namespace TourPlanner.ViewModels
 
             DeleteTourCommand = new RelayCommand(_ => {
                 tourHandler.DeleteTour(CurrentTour);
-
                 mainViewModel.RefreshTourList(tourHandler.GetTours());
                 mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
             });
@@ -130,7 +140,7 @@ namespace TourPlanner.ViewModels
 
         public void RefreshTourLogList(IEnumerable<TourLog> tourLogList, ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
-            TourLog tmpTourLog = null;
+            TourLog? tmpTourLog = null;
             if (CurrentTourLog != null)
             {
                 tmpTourLog = new TourLog(CurrentTourLog);
@@ -147,6 +157,8 @@ namespace TourPlanner.ViewModels
 
                 TourLogsList.Add(item);
             }
+
+            NumberOfTourLogsFound = $"{tourDictionary.GetResourceFromDictionary("StringNumberOfTourLogsFound")} {TourLogsList.Count}";
             Popularity = ComputedTourAttribute.CalculatePopularity(tourHandler, CurrentTour);
             ChildFriendliness = ComputedTourAttribute.CalculateChildFriendliness(tourHandler, tourDictionary, CurrentTour);
         }

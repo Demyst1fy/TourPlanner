@@ -1,10 +1,8 @@
 using NUnit.Framework;
 using System;
-using TourPlanner;
-using TourPlanner.DataAccessLayer.Database;
 using TourPlanner.Models;
 
-namespace TourPlanner.Unittest.Modeltest
+namespace TourPlanner.Unittest
 {
     public class TourTest
     {

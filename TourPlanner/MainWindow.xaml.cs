@@ -1,6 +1,7 @@
-﻿using System.Windows;
-using TourPlanner.BusinessLayer;
-using TourPlanner.DictionaryHandler;
+﻿using System.Configuration;
+using System.Windows;
+using TourPlanner.BusinessLayer.TourHandler;
+using TourPlanner.BusinessLayer.DictionaryHandler;
 using TourPlanner.ViewModels;
 
 namespace TourPlanner
@@ -13,7 +14,9 @@ namespace TourPlanner
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainViewModel(TourHandler.GetHandler(), new TourDictionary());
+
+            string language = ConfigurationManager.AppSettings["Language"] ?? "English";
+            DataContext = new MainViewModel(TourHandlerFactory.GetHandler(), new TourDictionary(language));
         }
     }
 }

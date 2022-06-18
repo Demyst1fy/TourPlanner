@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TourPlanner.BusinessLayer.JsonClasses
+namespace TourPlanner.BusinessLayer.TourAttributes
 {
     public class TourAPIData
     {

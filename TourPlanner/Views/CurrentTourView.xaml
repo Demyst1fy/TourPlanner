@@ -82,6 +82,7 @@
 
         <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
             <TextBlock FontSize="24" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{DynamicResource StringTourLogs}"/>
+            <TextBlock Grid.Column="0" Margin="5,5,0,0" VerticalAlignment="Center" Text="{Binding NumberOfTourLogsFound}"/>
             <ListView Margin="5,5,5,5"
                     ItemsSource="{Binding TourLogsList}"
                     SelectedItem="{Binding CurrentTourLog}">

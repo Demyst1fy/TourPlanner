@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using TourPlanner.DataAccessLayer.Exceptions;
 using TourPlanner.Models;
 
 namespace TourPlanner.DataAccessLayer.FileSystem
@@ -31,21 +32,28 @@ namespace TourPlanner.DataAccessLayer.FileSystem
             return _fileSystem;
         }
 
-        public void SaveImageFile(string start, string destination, int currentIncrementValue)
+        public void SaveImageFile(Tour tour, int currentIncrementValue)
         {
-            var apikey = ConfigurationManager.AppSettings["MapquestAPIKey"];
+            var apiKey = ConfigurationManager.AppSettings["MapquestAPIKey"];
+            var mapQuestAPIDirectionLink = ConfigurationManager.AppSettings["MapQuestAPIStaticMap"];
 
             Directory.CreateDirectory(_path);
             var file = $"{_path}/{currentIncrementValue}.png";
 
-            using WebClient client = new WebClient();
-            client.DownloadFile(
-                new Uri($"https://www.mapquestapi.com/staticmap/v5/map?" +
-                $"start={start}" +
-                $"&end={destination}" +
-                $"&key={apikey}" +
-                $"&size=640,480@2x"
-                ), file);
+            try
+            {
+                using WebClient client = new WebClient();
+                client.DownloadFile(
+                    new Uri($"{mapQuestAPIDirectionLink}" +
+                    $"start={tour.Start}" +
+                    $"&end={tour.Destination}" +
+                    $"&key={apiKey}" +
+                    $"&size=640,480@2x"
+                    ), file);
+            } catch (Exception ex)
+            {
+                throw new NoMapReceivedException($"No map received for tour: {tour.Name} {Environment.NewLine} Message: {ex.Message}");
+            }
         }
 
         public ImageSource LoadImageFile(Tour tour)
@@ -54,13 +62,17 @@ namespace TourPlanner.DataAccessLayer.FileSystem
 
             var bitmap = new BitmapImage();
 
-            using var stream = File.OpenRead(filePath);
-
-            bitmap.BeginInit();
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.StreamSource = stream;
-            bitmap.EndInit();
-            bitmap.Freeze();
+            try { 
+                using var stream = File.OpenRead(filePath);
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.StreamSource = stream;
+                bitmap.EndInit();
+                bitmap.Freeze();
+            } catch (Exception ex)
+            {
+                throw new NoMapImageFileFound($"No map image file found for tour: {tour.Name} {Environment.NewLine} Message: {ex.Message}");
+            }
 
             return bitmap;
         }

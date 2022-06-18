@@ -8,6 +8,7 @@
     <sys:String x:Key="StringNewTour">Neuer Tour:</sys:String>
     <sys:String x:Key="StringAdd">Hinzufügen</sys:String>
     <sys:String x:Key="StringSearch">Suchen</sys:String>
+    <sys:String x:Key="StringNumberOfToursFound">Anzahl der Touren gefunden:</sys:String>
     <sys:String x:Key="StringClear">Zurücksetzen</sys:String>
     <sys:String x:Key="StringModify">Ändern</sys:String>
     <sys:String x:Key="StringCancel">Abbrechen</sys:String>
@@ -32,6 +33,7 @@
     <sys:String x:Key="StringNewLogFor">Neuer Log für:</sys:String>
     <sys:String x:Key="StringModifyLogFor">Log ändern für:</sys:String>
     <sys:String x:Key="StringTourLogs">Aufzeichnungen</sys:String>
+    <sys:String x:Key="StringNumberOfTourLogsFound">Anzahl der Aufzeichnungen gefunden:</sys:String>
     <sys:String x:Key="StringTourLogsDate">Datum/Zeit</sys:String>
     <sys:String x:Key="StringTourLogsDuration">Dauer</sys:String>
     <sys:String x:Key="StringTourLogsDifficulty">Schwierigkeit</sys:String>
@@ -43,6 +45,7 @@
     <sys:String x:Key="StringAddTourLog">Aufzeichnung hinzufügen</sys:String>
     <sys:String x:Key="StringModifyTourLog">Aufzeichnung ändern</sys:String>
     <sys:String x:Key="StringDeleteTourLog">Aufzeichnung löschen</sys:String>
-    <sys:String x:Key="StringErrorNotFilled">Beginn und Ziel müssen ausgefüllt werden.</sys:String>
-    <sys:String x:Key="StringErrorInvalidValuesResponse">Als Antwort kamen ungültige Werte. (Distanz = 0 oder Zeit = 0)</sys:String>
+    <sys:String x:Key="StringErrorNotFilled">Beginn und Ziel müssen ausgefüllt sein.</sys:String>
+    <sys:String x:Key="StringErrorTourNameAlreadyExists">Tour-Name existiert bereits.</sys:String>
+    <sys:String x:Key="StringErrorInvalidValuesResponse">Als Antwort kamen ungültige Werte.</sys:String>
 </ResourceDictionary>

@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using TourPlanner.Models;
 
-namespace TourPlanner.BusinessLayer {
+namespace TourPlanner.BusinessLayer.TourHandler
+{
     public interface ITourHandler {
         IEnumerable<Tour> GetTours();
         IEnumerable<TourLog> GetTourLogs(Tour tour);

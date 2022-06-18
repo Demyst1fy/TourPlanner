@@ -2,11 +2,10 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using TourPlanner.BusinessLayer;
 using TourPlanner.Models;
 using TourPlanner.ViewModels;
-using TourPlanner.DictionaryHandler;
+using TourPlanner.BusinessLayer.DictionaryHandler;
+using TourPlanner.BusinessLayer.TourHandler;
 
 namespace TourPlanner.Unittest
 {
@@ -54,13 +53,13 @@ namespace TourPlanner.Unittest
         public void Test_SwitchLanguage()
         {
             viewModel.SelectGermanCommand.Execute(viewModel);
-            mockTourDictionary.Verify(mock => mock.AddDictionaryToApp("./Languages/Deutsch.xaml"), Times.Once());
+            mockTourDictionary.Verify(mock => mock.AddDictionaryToApp("Deutsch"), Times.Once());
 
             viewModel.SelectEnglishCommand.Execute(viewModel);
-            mockTourDictionary.Verify(mock => mock.AddDictionaryToApp("./Languages/English.xaml"), Times.Once());
+            mockTourDictionary.Verify(mock => mock.AddDictionaryToApp("English"), Times.Once());
 
             viewModel.SelectGermanCommand.Execute(viewModel);
-            mockTourDictionary.Verify(mock => mock.AddDictionaryToApp("./Languages/Deutsch.xaml"), Times.Exactly(2));
+            mockTourDictionary.Verify(mock => mock.AddDictionaryToApp("Deutsch"), Times.Exactly(2));
         }
 
         [Test]

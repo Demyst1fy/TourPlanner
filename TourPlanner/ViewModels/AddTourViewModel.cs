@@ -2,27 +2,20 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using TourPlanner.BusinessLayer;
-using TourPlanner.BusinessLayer.JsonClasses;
+using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.Models;
 using TourPlanner.Utils;
-using TourPlanner.DictionaryHandler;
+using TourPlanner.BusinessLayer.DictionaryHandler;
+using TourPlanner.BusinessLayer.TourAttributes;
+using TourPlanner.BusinessLayer;
+using TourPlanner.BusinessLayer.APIRequest;
+using TourPlanner.BusinessLayer.Exceptions;
 
 namespace TourPlanner.ViewModels
 {
     public class AddTourViewModel : BaseViewModel
     {
-        private Visibility isError;
-        private string errorText;
-
-        private string name;
-        private string start;
-        private string destination;
-        private string description;
-        private string transportType;
-        public ICommand AddCommand { get; set; }
-        public ICommand CancelCommand { get; set; }
-
+        private string name = string.Empty;
         public string Name
         {
             get { return name; }
@@ -36,6 +29,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private string start = string.Empty;
         public string Start
         {
             get { return start; }
@@ -49,6 +43,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private string destination = string.Empty;
         public string Destination
         {
             get { return destination; }
@@ -62,6 +57,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private string description = string.Empty;
         public string Description
         {
             get { return description; }
@@ -75,6 +71,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private string transportType = string.Empty;
         public string TransportType
         {
             get { return transportType; }
@@ -88,6 +85,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private string errorText = string.Empty;
         public string ErrorText
         {
             get
@@ -101,63 +99,70 @@ namespace TourPlanner.ViewModels
             }
         }
 
-        public Visibility IsError
+        private bool available;
+        public bool Available
         {
             get
             {
-                return isError;
+                return available;
             }
             set
             {
-                isError = value;
-                RaisePropertyChangedEvent(nameof(IsError));
+                available = value;
+                RaisePropertyChangedEvent(nameof(Available));
             }
         }
 
+        public ICommand AddCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
+
         public AddTourViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
-            IsError = Visibility.Hidden;
-
             TransportType = tourDictionary.GetResourceFromDictionary("StringTourCar");
+            Available = true;
 
             AddCommand = new RelayCommand(async _ =>
             {
+                Available = false;
                 if (string.IsNullOrEmpty(Start) || string.IsNullOrEmpty(Destination))
                 {
                     ErrorText = tourDictionary.GetResourceFromDictionary("StringErrorNotFilled");
-                    IsError = Visibility.Visible;
+                    Available = true;
                     return;
                 }
 
                 TransportType = tourDictionary.ChangeTransportTypeToPassBL(TransportType);
 
-                TourAPIData tourAPIdata = await APIRequest.RequestDirection(Start, Destination, TransportType);
-
-                int statusCode = tourAPIdata.StatusCode;
-                List<object> messages = tourAPIdata.Message;
-                double distance = tourAPIdata.Distance;
-                TimeSpan time = TimeSpan.FromSeconds(tourAPIdata.Time);
-
-                if (statusCode != 0 || messages.Count != 0)
+                try
                 {
-                    ErrorText = $"Response: {statusCode} {Environment.NewLine}Message: {messages[0]}";
-                    IsError = Visibility.Visible;
-                    return;
-                }
+                    TourAPIData tourAPIdata = await MapquestAPIRequest.RequestDirection(Start, Destination, TransportType);
+                    int statusCode = tourAPIdata.StatusCode;
+                    List<object> messages = tourAPIdata.Message;
+                    double distance = tourAPIdata.Distance;
+                    TimeSpan time = TimeSpan.FromSeconds(tourAPIdata.Time);
 
-                if (distance == 0.0 || time == TimeSpan.Parse("00:00:00"))
+                    Tour newTour = new Tour(Name, Description, Start, Destination, TransportType, distance, time);
+                    tourHandler.AddNewTour(newTour);
+                    mainViewModel.RefreshTourList(tourHandler.GetTours());
+                    mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+                } 
+                catch (MapquestAPIErrorException ex)
                 {
-                    ErrorText = tourDictionary.GetResourceFromDictionary("StringErrorInvalidValuesResponse");
-                    IsError = Visibility.Visible;
-                    return;
+                    ErrorText = $"{nameof(MapquestAPIErrorException)}: {ex.Message} {Environment.NewLine}" +
+                    $"Response-Code: {ex.ErrorCode} {Environment.NewLine}" +
+                    $"Response-Message: {ex.ErrorMessage}";
                 }
-
-                Tour newTour = new Tour(Name, Description, Start, Destination, TransportType, distance, time);
-
-                tourHandler.AddNewTour(newTour);
-
-                mainViewModel.RefreshTourList(tourHandler.GetTours());
-                mainViewModel.SelectedViewModel = new WelcomeViewModel(mainViewModel, tourHandler, tourDictionary);
+                catch (MapquestAPIInvalidValuesException ex)
+                {
+                    ErrorText = $"{nameof(MapquestAPIInvalidValuesException)}: {ex.Message} {Environment.NewLine}" +
+                    $"Values: Distance({ex.InvalidDistance}), Time({TimeSpan.FromSeconds(ex.InvalidTime)} {Environment.NewLine})" +
+                    $"{tourDictionary.GetResourceFromDictionary("StringErrorInvalidValuesResponse")}";
+                }
+                catch (TourAlreadyExistsException ex)
+                {
+                    ErrorText = $"{tourDictionary.GetResourceFromDictionary("StringErrorTourNameAlreadyExists")}";
+                }
+                Available = true;
             });
 
             CancelCommand = new RelayCommand(_ => {

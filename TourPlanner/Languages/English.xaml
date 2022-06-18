@@ -8,6 +8,7 @@
     <sys:String x:Key="StringNewTour">New Tour:</sys:String>
     <sys:String x:Key="StringAdd">Add</sys:String>
     <sys:String x:Key="StringSearch">Search</sys:String>
+    <sys:String x:Key="StringNumberOfToursFound">Number of Tours found:</sys:String>
     <sys:String x:Key="StringClear">Clear</sys:String>
     <sys:String x:Key="StringModify">Modify</sys:String>
     <sys:String x:Key="StringCancel">Cancel</sys:String>
@@ -32,6 +33,7 @@
     <sys:String x:Key="StringNewLogFor">New Log for: </sys:String>
     <sys:String x:Key="StringModifyLogFor">Modify Log for: </sys:String>
     <sys:String x:Key="StringTourLogs">Logs</sys:String>
+    <sys:String x:Key="StringNumberOfTourLogsFound">Number of Tourlogs found:</sys:String>
     <sys:String x:Key="StringTourLogsDate">Date/Time</sys:String>
     <sys:String x:Key="StringTourLogsDuration">Duration</sys:String>
     <sys:String x:Key="StringTourLogsDifficulty">Difficulty</sys:String>
@@ -44,5 +46,6 @@
     <sys:String x:Key="StringModifyTourLog">Modify Log</sys:String>
     <sys:String x:Key="StringDeleteTourLog">Delete Log</sys:String>
     <sys:String x:Key="StringErrorNotFilled">Start and Destination must be filled.</sys:String>
-    <sys:String x:Key="StringErrorInvalidValuesResponse">Invalid Values came as response. (Distance = 0 or Time = 0)</sys:String>
+    <sys:String x:Key="StringErrorTourNameAlreadyExists">Name of tour already exists.</sys:String>
+    <sys:String x:Key="StringErrorInvalidValuesResponse">Invalid Values came as response.</sys:String>
 </ResourceDictionary>

@@ -1,20 +1,37 @@
 ﻿using System;
+using System.Configuration;
 using System.Windows;
 
-namespace TourPlanner.DictionaryHandler
+namespace TourPlanner.BusinessLayer.DictionaryHandler
 {
     public class TourDictionary : ITourDictionary
     {
-        public TourDictionary()
+        public TourDictionary(string language)
         {
-            AddDictionaryToApp("./Languages/English.xaml");
+            AddDictionaryToApp(language);
         }
 
-        public void AddDictionaryToApp(string path)
+        public void AddDictionaryToApp(string language)
         {
+            string path = $"./Languages/{language}.xaml";
             ResourceDictionary dictionary = new ResourceDictionary();
             dictionary.Source = new Uri(path, UriKind.Relative);
             Application.Current.Resources.MergedDictionaries.Add(dictionary);
+
+            SetLanguageSettings(language);
+        }
+        private void SetLanguageSettings(string language)
+        {
+            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            var appSettings = configFile.AppSettings.Settings;
+
+            if (appSettings["Language"] != null)
+            {
+                appSettings["Language"].Value = language;
+            }
+
+            configFile.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
         }
 
         public string GetResourceFromDictionary(string index)

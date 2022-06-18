@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Input;
-using TourPlanner.BusinessLayer;
+using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.Models;
-using TourPlanner.DictionaryHandler;
+using TourPlanner.BusinessLayer.DictionaryHandler;
 using TourPlanner.Utils;
 
 namespace TourPlanner.ViewModels
@@ -10,14 +10,6 @@ namespace TourPlanner.ViewModels
     public class AddTourLogViewModel : BaseViewModel
     {
         private Tour currentTour;
-
-        private string comment;
-        private string difficulty;
-        private TimeSpan totalTime;
-        private int rating;
-        public ICommand AddCommand { get; set; }
-        public ICommand CancelCommand { get; set; }
-
         public Tour CurrentTour
         {
             get
@@ -31,6 +23,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private string comment = string.Empty;
         public string Comment
         {
             get { return comment; }
@@ -44,6 +37,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private string difficulty = string.Empty;
         public string Difficulty
         {
             get { return difficulty; }
@@ -56,7 +50,7 @@ namespace TourPlanner.ViewModels
                 }
             }
         }
-
+        private TimeSpan totalTime;
         public TimeSpan TotalTime
         {
             get { return totalTime; }
@@ -70,6 +64,7 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        private int rating = 0;
         public int Rating
         {
             get { return rating; }
@@ -83,22 +78,19 @@ namespace TourPlanner.ViewModels
             }
         }
 
+        public ICommand AddCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
+
         public AddTourLogViewModel(MainViewModel mainViewModel, ITourHandler tourHandler, ITourDictionary tourDictionary)
         {
+            CurrentTour = mainViewModel.CurrentTour;
             Difficulty = tourDictionary.GetResourceFromDictionary("StringTourLogsDifficultyEasy");
             Rating = 5;
 
-            tourHandler = TourHandler.GetHandler();
-            CurrentTour = mainViewModel.CurrentTour;
-
             AddCommand = new RelayCommand(_ => {
-
                 Difficulty = tourDictionary.ChangeDifficultyToPassBL(Difficulty);
-
                 TourLog newTourLog = new TourLog(Comment, Difficulty, TotalTime, Rating);
-
                 tourHandler.AddNewTourLog(CurrentTour.Id, newTourLog);
-
                 mainViewModel.SelectedViewModel = new CurrentTourViewModel(mainViewModel, tourHandler, tourDictionary);
             });
 

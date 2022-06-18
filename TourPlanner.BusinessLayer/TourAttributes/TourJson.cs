@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TourPlanner.BusinessLayer.JsonClasses
+namespace TourPlanner.BusinessLayer.TourAttributes
 {
     public class BoundingBox
     {

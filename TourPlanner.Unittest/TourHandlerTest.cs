@@ -1,8 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using TourPlanner.BusinessLayer;
+using TourPlanner.BusinessLayer.TourHandler;
 using TourPlanner.DataAccessLayer.Database;
 using TourPlanner.DataAccessLayer.FileSystem;
 using TourPlanner.Models;
@@ -15,21 +14,22 @@ namespace TourPlanner.Unittest
         private Mock<IFileSystem> _fileSystem = new Mock<IFileSystem>();
         private ITourHandler _tourHandler;
 
-        private Tour testTour1 = new Tour(1, "TestTour1", "Description1", "Wien", "Graz", "Car", 200, new TimeSpan(2, 0, 0));
-        private TourLog testTourLog1 = new TourLog("Comment1", "Medium", new TimeSpan(2, 30, 30), 4);
-        private List<TourLog> tourLogList = new List<TourLog>();
-        private List<Tour> tourList = new List<Tour>();
+        private Tour testTour1;
+        private TourLog testTourLog1;
 
         [SetUp]
         public void Setup()
         {
-            _tourHandler = TourHandler.GetHandler(_database.Object, _fileSystem.Object);
+            _tourHandler = TourHandlerFactory.GetHandler(_database.Object, _fileSystem.Object);
+            testTour1 = new Tour(1, "TestTour1", "Description1", "Wien", "Graz", "Car", 200, new TimeSpan(2, 0, 0));
+            testTourLog1 = new TourLog("Comment1", "Medium", new TimeSpan(2, 30, 30), 4);
         }
 
         [Test]
         public void Test_SameInstance()
         {
-            ITourHandler _secondTourHandler = TourHandler.GetHandler(_database.Object, _fileSystem.Object);
+            ITourHandler _secondTourHandler = TourHandlerFactory.GetHandler(_database.Object, _fileSystem.Object);
+
             Assert.AreEqual(_tourHandler, _secondTourHandler);
         }
 
@@ -39,7 +39,7 @@ namespace TourPlanner.Unittest
             _tourHandler.AddNewTour(testTour1);
 
             _database.Verify(mock => mock.AddNewTour(testTour1), Times.Once());
-            _fileSystem.Verify(mock => mock.SaveImageFile(testTour1.Start, testTour1.Destination, It.IsAny<int>()), Times.Once());
+            _fileSystem.Verify(mock => mock.SaveImageFile(testTour1, It.IsAny<int>()), Times.Once());
             _database.Verify(mock => mock.AddNewTourLog(testTour1.Id, testTourLog1), Times.Never());
         }
 
