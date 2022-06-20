@@ -16,7 +16,7 @@ namespace TourPlanner.DataAccessLayer.Database
         {
             if (database == null)
             {
-                database = Database.CreateDatabase();
+                database = Database.CreateDatabaseInstance();
             }
             return database;
         }

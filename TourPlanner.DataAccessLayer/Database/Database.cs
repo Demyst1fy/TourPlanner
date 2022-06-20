@@ -24,14 +24,14 @@ namespace TourPlanner.DataAccessLayer.Database
 
             _conString = ConfigurationManager.AppSettings["ConnectionString"] ?? "not found";
 
-            CreateDatabaseIfNotExists();
+            CreateDatabase();
 
             _conString += $";Database={_dbName}";
 
-            CreateTablesIfNotExist();
+            CreateTables();
         }
 
-        public static IDatabase CreateDatabase()
+        public static IDatabase CreateDatabaseInstance()
         {
             if (_database == null)
             {
@@ -47,7 +47,7 @@ namespace TourPlanner.DataAccessLayer.Database
             return con;
         }
 
-        private void CreateDatabaseIfNotExists()
+        private void CreateDatabase()
         {
             string sql = $"SELECT 1 FROM pg_database WHERE datname='{_dbName}'";
 
@@ -76,7 +76,7 @@ namespace TourPlanner.DataAccessLayer.Database
             }
         }
 
-        private void CreateTablesIfNotExist()
+        private void CreateTables()
         {
             string sql = $"CREATE TABLE IF NOT EXISTS {_dbToursTableName}(" +
                 "t_id SERIAL PRIMARY KEY," +

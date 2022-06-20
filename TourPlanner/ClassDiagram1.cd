@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TourPlanner.ViewModels.AddTourLogViewModel" Collapsed="true">
+    <Position X="23.75" Y="7.5" Width="2.25" />
+    <InheritanceLine Type="TourPlanner.ViewModels.BaseViewModel" FixedToPoint="true">
+      <Path>
+        <Point X="27.5" Y="5.247" />
+        <Point X="27.5" Y="7.812" />
+        <Point X="26" Y="7.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>QAQAAAAFAAAAAQACAAAAAAAAAQAAAAEAABAAAAAQAAA=</HashCode>
+      <FileName>ViewModels\AddTourLogViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TourPlanner.ViewModels.AddTourViewModel" Collapsed="true">
+    <Position X="23.75" Y="6.5" Width="2.25" />
+    <InheritanceLine Type="TourPlanner.ViewModels.BaseViewModel" FixedToPoint="true">
+      <Path>
+        <Point X="27.5" Y="5.247" />
+        <Point X="27.5" Y="6.875" />
+        <Point X="26" Y="6.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>QAAQAAAAACAgAAAiIEAAACRAAAAkAAAEAAAABAAAEAA=</HashCode>
+      <FileName>ViewModels\AddTourViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TourPlanner.ViewModels.BaseViewModel">
+    <Position X="26.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAAAgAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\BaseViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TourPlanner.ViewModels.CurrentTourViewModel" Collapsed="true">
+    <Position X="23.75" Y="5.5" Width="2.25" />
+    <InheritanceLine Type="TourPlanner.ViewModels.BaseViewModel" FixedToPoint="true">
+      <Path>
+        <Point X="27.5" Y="5.247" />
+        <Point X="27.5" Y="5.875" />
+        <Point X="26" Y="5.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAQAQAAEgEAAAAAAAIAAQQAIABAQAgAAAFCAQQCUAEA=</HashCode>
+      <FileName>ViewModels\CurrentTourViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TourPlanner.ViewModels.MainViewModel" Collapsed="true">
+    <Position X="23.75" Y="3.5" Width="2.25" />
+    <InheritanceLine Type="TourPlanner.ViewModels.BaseViewModel" FixedToPoint="true">
+      <Path>
+        <Point X="26.75" Y="3.813" />
+        <Point X="26" Y="3.813" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>EgAAAIAAEACAgCAQhAggAAEAAAAAAAAAEhAAAAISAAg=</HashCode>
+      <FileName>ViewModels\MainViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TourPlanner.ViewModels.ModifyTourLogViewModel" Collapsed="true">
+    <Position X="23.75" Y="8.5" Width="2.25" />
+    <InheritanceLine Type="TourPlanner.ViewModels.BaseViewModel" FixedToPoint="true">
+      <Path>
+        <Point X="27.5" Y="5.247" />
+        <Point X="27.5" Y="8.812" />
+        <Point X="26" Y="8.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>QAAAQAAAAEAAAAAAAAAAAAAAIAAAAAAAAABAAAAAQAA=</HashCode>
+      <FileName>ViewModels\ModifyTourLogViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TourPlanner.ViewModels.ModifyTourViewModel" Collapsed="true">
+    <Position X="23.75" Y="9.5" Width="2.25" />
+    <InheritanceLine Type="TourPlanner.ViewModels.BaseViewModel" FixedToPoint="true">
+      <Path>
+        <Point X="27.5" Y="5.247" />
+        <Point X="27.5" Y="9.812" />
+        <Point X="26" Y="9.812" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAEAAACBAIAAgAAAAABAAAAAQAAA=</HashCode>
+      <FileName>ViewModels\ModifyTourViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TourPlanner.ViewModels.WelcomeViewModel" Collapsed="true">
+    <Position X="23.75" Y="4.5" Width="2.25" />
+    <InheritanceLine Type="TourPlanner.ViewModels.BaseViewModel" FixedToPoint="true">
+      <Path>
+        <Point X="26.75" Y="4.875" />
+        <Point X="26" Y="4.875" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>ViewModels\WelcomeViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TourPlanner.Utils.RelayCommand" Collapsed="true">
+    <Position X="28.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAACAAQAAEAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Utils\RelayCommand.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TourPlanner.Utils.VisibilityConverter" Collapsed="true">
+    <Position X="28.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utils\VisibilityConverter.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
