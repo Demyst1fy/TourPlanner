@@ -26,6 +26,7 @@ namespace TourPlanner.Unittest
         {
             mockTourHandler = new Mock<ITourHandler>();
             mockTourDictionary = new Mock<ITourDictionary>();
+            mockLogger = new Mock<ILog4NetLogger>();
             viewModel = new MainViewModel(mockTourHandler.Object, mockTourDictionary.Object, mockLogger.Object);
             testTour1 = new Tour(1, "TestTour1", "Description1", "Wien", "Graz", "Car", 200, new TimeSpan(2, 0, 0));
             testTour2 = new Tour(1, "TestTour2", "Description2", "Graz", "Wien", "Car", 200, new TimeSpan(2, 0, 0));

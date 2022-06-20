@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Media;
 using TourPlanner.BusinessLayer.Exceptions;
 using TourPlanner.BusinessLayer.Logger;
@@ -76,7 +75,7 @@ namespace TourPlanner.BusinessLayer.TourHandler
             {
                 _database.AddNewTourLog(tourId, newTourLog);
 
-                _logger.Info($"Tour log added");
+                _logger.Info($"Tour log added for Tour ID: [{tourId}]");
             }
             catch (DatabaseException ex)
             {
@@ -152,7 +151,7 @@ namespace TourPlanner.BusinessLayer.TourHandler
             try
             {
                 _database.ModifyTour(id, modifiedTour);
-                _logger.Info($"Tour modified. ID: [{modifiedTour.Id}] Name: [{modifiedTour.Name}]");
+                _logger.Info($"Tour modified. ID: [{id}] Name: [{modifiedTour.Name}]");
             }
             catch (DatabaseException ex)
             {

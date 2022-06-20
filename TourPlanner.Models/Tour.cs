@@ -14,6 +14,8 @@ namespace TourPlanner.Models
         public double Distance { get; set; }
         public TimeSpan Time { get; set; }
 
+        public Tour() { }
+
         public Tour(string name, string description, string start, string destination, string transportType, double distance, TimeSpan time)
         {
             if (string.IsNullOrEmpty(name))

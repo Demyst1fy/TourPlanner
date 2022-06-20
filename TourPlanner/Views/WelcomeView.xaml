@@ -7,8 +7,16 @@
              mc:Ignorable="d">
     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
         <TextBlock FontSize="36" TextAlignment="Center" Text="{DynamicResource StringWelcome}"/>
-        <Button Margin="5,5,5,5" Width="100" Command="{Binding AddTourCommand}">
-            <TextBlock Text="{DynamicResource StringAddTour}"/>
-        </Button>
+        <WrapPanel HorizontalAlignment="Center">
+            <Button Margin="5" Width="150" Command="{Binding AddTourCommand}">
+                <TextBlock Text="{DynamicResource StringAddTour}"/>
+            </Button>
+            <Button Margin="5" Width="220" Command="{Binding GenerateTourSummarizeReportCommand}" HorizontalAlignment="Right">
+                <TextBlock Text="{DynamicResource StringGenerateTourSummarizeReport}"/>
+            </Button>
+            <Button Margin="5" Width="150" Command="{Binding ImportTourCommand}">
+                <TextBlock Text="{DynamicResource StringImportTour}"/>
+            </Button>
+        </WrapPanel>
     </StackPanel>
 </UserControl>

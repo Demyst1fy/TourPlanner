@@ -52,6 +52,7 @@ namespace TourPlanner.BusinessLayer.APIRequest
 
             int statusCode = myDeserializedClass.info.statuscode;
             List<object> messages = myDeserializedClass.info.messages;
+
             if (int.Parse(statusCode.ToString().Substring(0, 1)) >= 4 || messages.Count != 0)
             {
                 throw new MapquestAPIErrorException("Mapquest Status Error", statusCode, messages[0].ToString());

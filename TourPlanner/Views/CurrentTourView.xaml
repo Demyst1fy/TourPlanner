@@ -68,8 +68,11 @@
                         <Button Width="100" Margin="5,5,5,5" Command="{Binding DeleteTourCommand}">
                             <TextBlock Text="{DynamicResource StringDeleteTour}"/>
                         </Button>
-                        <Button Width="150" Margin="5,5,5,5" Command="{Binding GenerateSingleTourReportCommand}">
+                        <Button Width="170" Margin="5,5,5,5" Command="{Binding GenerateSingleTourReportCommand}">
                             <TextBlock Text="{DynamicResource StringGenerateSingleTourReport}"/>
+                        </Button>
+                        <Button Width="150" Margin="5,5,5,5" Command="{Binding ExportTourCommand}">
+                            <TextBlock Text="{DynamicResource StringExportTour}"/>
                         </Button>
                     </WrapPanel>
                 </StackPanel>

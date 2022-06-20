@@ -21,7 +21,6 @@ namespace TourPlanner.BusinessLayer.PDFGenerator
 {
     public static class PDFGenerator
     {
-
         public static void GenerateSingleReport(ITourDictionary tourDictionary, Tour tour, IEnumerable<TourLog> tourLogs, double popularity, double childFriendliness)
         {
             try

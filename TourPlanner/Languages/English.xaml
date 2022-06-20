@@ -12,13 +12,17 @@
     <sys:String x:Key="StringClear">Clear</sys:String>
     <sys:String x:Key="StringModify">Modify</sys:String>
     <sys:String x:Key="StringCancel">Cancel</sys:String>
-    <sys:String x:Key="StringAddTour">Add Tour</sys:String>
+    <sys:String x:Key="StringAddTour">Add new Tour</sys:String>
     <sys:String x:Key="StringModifyTour">Modify Tour</sys:String>
     <sys:String x:Key="StringDeleteTour">Delete Tour</sys:String>
-    <sys:String x:Key="StringGenerateTourSummarizeReport">Generate Tour-Summarize Report</sys:String>
+    <sys:String x:Key="StringGenerateTourSummarizeReport">Generate Tour-Summarize Report (PDF)</sys:String>
     <sys:String x:Key="StringTourSummarizeAverage">Summarized Tours Report (Average Values)</sys:String>
-    <sys:String x:Key="StringGenerateSingleTourReport">Generate Tour Report</sys:String>
+    <sys:String x:Key="StringGenerateSingleTourReport">Generate Tour Report (PDF)</sys:String>
     <sys:String x:Key="StringPDFGenerationSuccess">PDF generated!</sys:String>
+    <sys:String x:Key="StringExportTour">Export Tour (JSON)</sys:String>
+    <sys:String x:Key="StringExportTourSuccess">Tour successfully exported!</sys:String>
+    <sys:String x:Key="StringImportTour">Import Tour (JSON)</sys:String>
+    <sys:String x:Key="StringImportTourSuccess">Tour successfully imported!</sys:String>
     <sys:String x:Key="StringTourName">Name</sys:String>
     <sys:String x:Key="StringTourStart">Start</sys:String>
     <sys:String x:Key="StringTourDestination">Destination</sys:String>
@@ -62,4 +66,7 @@
     <sys:String x:Key="StringErrorInvalidValuesResponse">Invalid Values came as response.</sys:String>
     <sys:String x:Key="StringErrorPDFGenerationError">An error occured during PDF generation.</sys:String>
     <sys:String x:Key="StringErrorNoTours">There are no tours listed yet.</sys:String>
+    <sys:String x:Key="StringErrorFileIsEmpty">File is empty.</sys:String>
+    <sys:String x:Key="StringErrorFileImport">An error occured during import.</sys:String>
+    <sys:String x:Key="StringErrorFileExport">An error occured during export.</sys:String>
 </ResourceDictionary>

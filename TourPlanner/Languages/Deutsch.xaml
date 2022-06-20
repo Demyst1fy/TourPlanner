@@ -5,20 +5,24 @@
     <sys:String x:Key="StringWelcome">Willkommen bei Ihrem Tour Planner!</sys:String>
     <sys:String x:Key="StringSelectLanguage">Ausgewählte Sprache: Deutsch</sys:String>
     <sys:String x:Key="StringSearchTour">Tour suchen:</sys:String>
-    <sys:String x:Key="StringNewTour">Neuer Tour:</sys:String>
+    <sys:String x:Key="StringNewTour">Neue Tour:</sys:String>
     <sys:String x:Key="StringAdd">Hinzufügen</sys:String>
     <sys:String x:Key="StringSearch">Suchen</sys:String>
     <sys:String x:Key="StringNumberOfToursFound">Anzahl der Touren gefunden:</sys:String>
     <sys:String x:Key="StringClear">Zurücksetzen</sys:String>
     <sys:String x:Key="StringModify">Ändern</sys:String>
     <sys:String x:Key="StringCancel">Abbrechen</sys:String>
-    <sys:String x:Key="StringAddTour">Tour hinzufügen</sys:String>
+    <sys:String x:Key="StringAddTour">Neue Tour hinzufügen</sys:String>
     <sys:String x:Key="StringModifyTour">Tour ändern</sys:String>
     <sys:String x:Key="StringDeleteTour">Tour löschen</sys:String>
-    <sys:String x:Key="StringGenerateTourSummarizeReport">Bericht der Touren generieren</sys:String>
+    <sys:String x:Key="StringGenerateTourSummarizeReport">Bericht der Touren generieren (PDF)</sys:String>
     <sys:String x:Key="StringTourSummarizeAverage">Bericht der Touren (Durchschnittswerte)</sys:String>
-    <sys:String x:Key="StringGenerateSingleTourReport">Tour Bericht generieren</sys:String>
+    <sys:String x:Key="StringGenerateSingleTourReport">Tour Bericht generieren (PDF)</sys:String>
     <sys:String x:Key="StringPDFGenerationSuccess">PDF generiert!</sys:String>
+    <sys:String x:Key="StringExportTour">Export Tour (JSON)</sys:String>
+    <sys:String x:Key="StringExportTourSuccess">Tour erfolgreich exportiert!</sys:String>
+    <sys:String x:Key="StringImportTour">Import Tour (JSON)</sys:String>
+    <sys:String x:Key="StringImportTourSuccess">Tour erfolgreich importiert!</sys:String>
     <sys:String x:Key="StringTourName">Name</sys:String>
     <sys:String x:Key="StringTourStart">Beginn</sys:String>
     <sys:String x:Key="StringTourDestination">Ziel</sys:String>
@@ -62,4 +66,7 @@
     <sys:String x:Key="StringErrorInvalidValuesResponse">Als Antwort kamen ungültige Werte.</sys:String>
     <sys:String x:Key="StringErrorPDFGenerationError">PDF Generierung fehlgeschlagen.</sys:String>
     <sys:String x:Key="StringErrorNoTours">Es sind zurzeit keine Touren aufgelistet.</sys:String>
+    <sys:String x:Key="StringErrorFileIsEmpty">Datei ist leer.</sys:String>
+    <sys:String x:Key="StringErrorFileImport">Import fehlgeschlagen.</sys:String>
+    <sys:String x:Key="StringErrorFileExport">Export fehlgeschlagen.</sys:String>
 </ResourceDictionary>

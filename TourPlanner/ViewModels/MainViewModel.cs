@@ -9,6 +9,8 @@ using TourPlanner.BusinessLayer.PDFGenerator;
 using System.Windows;
 using TourPlanner.BusinessLayer.Exceptions;
 using TourPlanner.BusinessLayer.Logger;
+using Microsoft.Win32;
+using TourPlanner.BusinessLayer.ExportImport;
 
 namespace TourPlanner.ViewModels
 {
@@ -76,6 +78,7 @@ namespace TourPlanner.ViewModels
         public ICommand ClearCommand { get; private set; }
         public ICommand AddTourCommand { get; private set; }
         public ICommand GenerateTourSummarizeReportCommand { get; private set; }
+        public ICommand ImportTourCommand { get; private set; }
         public ICommand SelectEnglishCommand { get; private set; }
         public ICommand SelectGermanCommand { get; private set; }
 
@@ -150,16 +153,57 @@ namespace TourPlanner.ViewModels
                 }
             });
 
+            ImportTourCommand = new RelayCommand(_ =>
+            {
+                OpenFileDialog dialog = new OpenFileDialog();
+                dialog.Filter = "JSON-Files (*.json)|*.json";
+
+                if(dialog.ShowDialog() == true)
+                {
+                    string message = string.Empty;
+                    MessageBoxImage messageBoxImage = MessageBoxImage.Information;
+
+                    string jsonFile = dialog.FileName;
+                    int result = JsonFileHandler.ImportTour(TourHandler, Log4NetLogger, jsonFile);
+
+                    switch (result)
+                    {
+                        case -1:
+                            message = tourDictionary.GetResourceFromDictionary("StringErrorFileIsEmpty");
+                            messageBoxImage = MessageBoxImage.Error;
+                            break;
+                        case -2:
+                            message = tourDictionary.GetResourceFromDictionary("StringErrorTourNameAlreadyExists");
+                            messageBoxImage = MessageBoxImage.Error;
+                            break;
+                        case -3:
+                            message = tourDictionary.GetResourceFromDictionary("StringErrorFileImport");
+                            messageBoxImage = MessageBoxImage.Error;
+                            break;
+                        default:
+                            message = tourDictionary.GetResourceFromDictionary("StringImportTourSuccess");
+                            RefreshTourList(TourHandler.GetTours());
+                            break;
+                               
+                    }
+                    MessageBox.Show(
+                        message,
+                        tourDictionary.GetResourceFromDictionary("StringTitle"),
+                        MessageBoxButton.OK,
+                        messageBoxImage);
+                }
+            });
+
             SelectEnglishCommand = new RelayCommand(_ =>
             {
                 TourDictionary.AddDictionaryToApp("English");
-                RefreshTourList(tourHandler.GetTours());
+                RefreshTourList(TourHandler.GetTours());
             });
 
             SelectGermanCommand = new RelayCommand(_ =>
             {
                 TourDictionary.AddDictionaryToApp("Deutsch");
-                RefreshTourList(tourHandler.GetTours());
+                RefreshTourList(TourHandler.GetTours());
             });
         }
 

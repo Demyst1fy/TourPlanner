@@ -20,7 +20,9 @@ namespace TourPlanner
             var dictionary = new TourDictionary(language);
 
             var logger = Log4NetLoggerFactory.GetLogger();
+
             DataContext = new MainViewModel(tourHandler, dictionary, logger);
+
             InitializeComponent();
         }
     }

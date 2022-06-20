@@ -10,6 +10,7 @@ using TourPlanner.BusinessLayer.DictionaryHandler;
 using TourPlanner.BusinessLayer.TourAttributes;
 using TourPlanner.BusinessLayer.PDFGenerator;
 using TourPlanner.BusinessLayer.Exceptions;
+using TourPlanner.BusinessLayer.ExportImport;
 
 namespace TourPlanner.ViewModels
 {
@@ -96,6 +97,7 @@ namespace TourPlanner.ViewModels
         public ICommand ModifyTourCommand { get; set; }
         public ICommand DeleteTourCommand { get; set; }
         public ICommand GenerateSingleTourReportCommand { get; set; }
+        public ICommand ExportTourCommand { get; set; }
         public ICommand AddTourLogCommand { get; set; }
         public ICommand ModifyTourLogCommand { get; set; }
         public ICommand DeleteTourLogCommand { get; set; }
@@ -171,6 +173,30 @@ namespace TourPlanner.ViewModels
 
             AddTourLogCommand = new RelayCommand(_ => {
                 mainViewModel.SelectedViewModel = new AddTourLogViewModel(mainViewModel);
+            });
+
+            ExportTourCommand = new RelayCommand(_ => {
+                string message = string.Empty;
+                MessageBoxImage messageBoxImage = MessageBoxImage.Information;
+
+                bool result = JsonFileHandler.ExportTour(CurrentTour);
+
+                if (result)
+                {
+                    message = mainViewModel.TourDictionary.GetResourceFromDictionary("StringExportTourSuccess");
+                    messageBoxImage = MessageBoxImage.Information;
+                }
+                else
+                {
+                    message = mainViewModel.TourDictionary.GetResourceFromDictionary("StringErrorFileExport");
+                    messageBoxImage = MessageBoxImage.Error;
+                }
+
+                MessageBox.Show(
+                        message,
+                        mainViewModel.TourDictionary.GetResourceFromDictionary("StringTitle"),
+                        MessageBoxButton.OK,
+                        messageBoxImage);
             });
 
             ModifyTourLogCommand = new RelayCommand(_ => {

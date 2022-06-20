@@ -22,6 +22,7 @@
 
 
         <StackPanel Grid.Column="0" Grid.Row="0" Margin="5">
+
             <TextBlock FontSize="36" Margin="5" TextDecorations="Underline" FontStyle="Italic" FontWeight="Bold" Text="{DynamicResource StringTitle}"/>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -32,7 +33,6 @@
                 <TextBlock Grid.Column="0" Margin="5" VerticalAlignment="Center" Text="{DynamicResource StringSearchTour}"/>
                 <TextBox Grid.Column="1" Margin="5" VerticalAlignment="Center" Text="{Binding SearchName, Mode=TwoWay}"/>
             </Grid>
-
 
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -50,15 +50,18 @@
             <Button Grid.Row="1" Margin="5" Command="{Binding AddTourCommand}">
                 <TextBlock Text="{DynamicResource StringAddTour}"/>
             </Button>
+            <TextBlock Grid.Column="0" Margin="5" VerticalAlignment="Center" Text="{Binding NumberOfToursFound}"/>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Margin="5" VerticalAlignment="Center" Text="{Binding NumberOfToursFound}"/>
-                <Button Width="200" Grid.Column="1" Margin="5" Command="{Binding GenerateTourSummarizeReportCommand}" HorizontalAlignment="Right">
+                <Button Grid.Column="0" Margin="5" Command="{Binding GenerateTourSummarizeReportCommand}" HorizontalAlignment="Right">
                     <TextBlock Text="{DynamicResource StringGenerateTourSummarizeReport}"/>
+                </Button>
+                <Button Grid.Column="1" Margin="5" Command="{Binding ImportTourCommand}">
+                    <TextBlock Text="{DynamicResource StringImportTour}"/>
                 </Button>
             </Grid>
         </StackPanel>
